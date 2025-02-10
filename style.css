@@ -871,8 +871,8 @@ div.card_cardImageContainer > .image-pants-cut:nth-child(4) {
     width: 100%;
     max-width: 150px;
   }
-  .step-1 {
-    align-items: end;
+  #textureContainer.step-1 {
+    align-items: start;
   }
   .step-1 .card_cardDetails {
     padding: 6px;
@@ -952,7 +952,7 @@ div.card_cardImageContainer > .image-pants-cut:nth-child(4) {
   }
   #textureContainer {
     justify-content: center;
-    align-items: center;
+    /* align-items: start; */
     padding: 0 20px;
     width: 100%;
     position: relative;
