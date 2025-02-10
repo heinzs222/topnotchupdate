@@ -1,0 +1,1438 @@
+@font-face {
+  font-family: "TAN Angleton";
+  src: url("../fonts/TAN - Angleton Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
+/* img {
+  width: 100%;
+} */
+button {
+  transition: all 0.3s ease;
+}
+/* Styles for custom select dropdown */
+.custom-select {
+  min-width: 350px;
+  position: relative;
+}
+
+/* Styles for arrow icon */
+#arrow {
+  position: absolute;
+  bottom: 20px;
+  right: 70vw;
+  width: 40px;
+  cursor: pointer;
+  z-index: 10;
+}
+.text-container > p,
+.text-step3,
+.accordion {
+  font-family: "TAN Angleton", sans-serif;
+  line-height: 1.5;
+}
+.card_infoSpaceContainer,
+.card_infoSpaceContainer * {
+  width: 100%;
+}
+/* Styles for select elements */
+select {
+  appearance: none;
+  width: 100%;
+  font-size: 1rem;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #caced1;
+  border-radius: 0.25rem;
+  color: #000;
+  cursor: pointer;
+  margin-top: -20px;
+}
+
+canvas {
+  outline: none;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0); /* mobile webkit */
+}
+
+/* General styles for body and canvas */
+body {
+  margin: 0;
+  height: 100vh;
+  width: 65vw;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0px 4px 50px 0px rgba(0, 0, 0, 0.3) inset;
+  font-family: "inter", sans-serif;
+}
+canvas {
+}
+body:has(#pantsMeasurementWrapper) {
+  width: 100vw;
+}
+#sidePanel:has(#pantsMeasurementWrapper) {
+  width: 100vw;
+}
+#sidePanel:has(#pantsMeasurementWrapper) 
+/* Ensure the main container allows scrolling */
+main {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Add this new CSS rule */
+.texture-container {
+  max-height: 80vh; /* Adjust based on your needs */
+  overflow-x: auto;
+}
+.svg-arrow-right {
+  width: 16px;
+  height: 16px;
+}
+/* Styles for side panel */
+#sidePanel {
+  position: absolute;
+  top: 0;
+
+  right: 0;
+  width: 30vw;
+  height: 100vh;
+  border-radius: 0px 76px 76px 0px;
+  background: #fff;
+  box-shadow: -9px 0px 24px 0px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+  padding: 30px 15px;
+}
+
+/* Styles for texture container */
+#textureContainer {
+  overflow-y: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  justify-content: center;
+  align-items: center;
+  row-gap: 15px;
+}
+#textureContainer:has(.accordion) .part-option {
+  padding: 15px;
+}
+
+.next-back-btns {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 15px;
+}
+#resetCameraButton,
+#backButton,
+#nextButton {
+  padding: 10px 20px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  width: 40%;
+  cursor: pointer;
+  border-radius: 21px;
+
+  text-align: center;
+}
+
+/* Hover effect for next button */
+#resetCameraButton:hover,
+#backButton:hover,
+#nextButton:hover {
+  background-color: #222;
+}
+
+/* Styles for render canvas */
+#renderCanvas {
+  width: calc(100% - 200px);
+  height: 100%;
+  display: block;
+  float: right;
+  touch-action: none;
+}
+
+/* Styles for texture buttons */
+.texture-button {
+  width: 100%;
+  cursor: pointer;
+}
+
+/* Styles for texture item containers */
+.textureItem {
+  width: 26%;
+  cursor: pointer;
+}
+
+/* Styles for text container paragraphs */
+.text-container > p {
+  color: #000;
+  text-align: center;
+
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 600;
+  padding: 0px;
+}
+
+/* Styles for info containers */
+.info-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #000;
+  font-family: "TAN Angleton", sans-serif;
+  font-size: 11px;
+  font-style: italic;
+  font-weight: 600;
+  padding: 0 5px;
+}
+
+/* Styles for accordions and sub-accordions */
+.accordion,
+.sub_accordion {
+  background-color: #fff;
+  cursor: pointer;
+  padding: 16px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 16px;
+  border-bottom: 1px solid #ddd;
+  transition: background-color 0.3s, max-height 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Styles for pants cut container */
+#pantsCutContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* Styles for pants items */
+.pants-item {
+  width: 128px; /* Adjust width for 5 items per row with gap */
+  text-align: center;
+
+  margin-right: 10px;
+}
+
+/* Styles for pants item images */
+.pants-item img {
+  width: 60%;
+  height: 115px;
+  display: block;
+  cursor: pointer;
+  margin: 0 auto;
+  object-fit: contain;
+  padding: 0 5px;
+}
+.img-wrapper img {
+  border-radius: 4px;
+  display: block;
+  margin: 0 auto;
+}
+.img-wrapper {
+  border-radius: 7px;
+  width: 100%;
+}
+
+/* Styles for pants item text */
+.pants-item p {
+  margin: 0;
+  font-size: 14px;
+  color: #000;
+}
+
+.text-step3 {
+  color: #000;
+
+  font-size: 27px;
+  font-style: normal;
+  font-weight: 400;
+
+  text-align: start;
+}
+
+.choice-container-step3 {
+  display: flex;
+
+  align-self: center;
+  gap: 10px;
+  align-items: start;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.choice-container-step3 > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 33.3%;
+}
+
+.choice-container-step3 > div > img {
+  width: 100%;
+}
+#tooltip {
+  position: absolute;
+  display: none;
+  pointer-events: none;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+  z-index: 1000; /* Ensure the tooltip is above other elements */
+  font-size: 14px;
+  white-space: nowrap;
+}
+.part-option {
+  background: transparent;
+
+  margin: 10px 5px;
+  font-family: "inter", sans-serif;
+  font-size: 18px;
+  cursor: pointer;
+}
+.choice-container-step3 > div > p {
+  color: #000;
+  text-align: center;
+  font-family: "TAN Angleton", sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.panel .part-item {
+  padding: 10px;
+  font-family: "inter", sans-serif;
+}
+.panel,
+.sub_panel {
+  max-height: 0;
+  overflow: hidden;
+  overflow-y: auto; /* Allow vertical scrolling */
+  width: 100%;
+  padding: 0 10px;
+  transition: max-height 0.3s ease;
+}
+div .selected p {
+  color: white;
+}
+.selected {
+  border-radius: 7px;
+  border: 1px solid #1a1a1a;
+  background: #1a1a1a;
+}
+
+.jacket-embroidery-choice.selected p {
+  color: white;
+}
+.jacket-embroidery-choice.selected,
+.pants-embroidery-choice.selected {
+  border: 2px solid #1a1a1a; /* Change as needed */
+  background-color: #1a1a1a; /* Change as needed */
+}
+
+.jacket-embroidery-choice,
+.pants-embroidery-choice {
+  cursor: pointer;
+  padding: 10px;
+  /* Add other styles as needed */
+}
+
+.step4 {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  gap: 5px;
+  padding: 10px;
+  width: 100%;
+}
+
+.left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 40%;
+}
+
+.left > img {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 60%;
+  padding: 20px;
+}
+.right > p {
+  color: #000;
+  font-family: Inter;
+  font-size: 15px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 100%; /* 15px */
+  text-align: start;
+  margin: 0;
+}
+.right > input {
+  width: 100%;
+  border: none;
+  background-color: #eeeeee;
+  padding: 10px;
+  margin-left: 20px;
+}
+
+.text-step4 {
+  color: #000;
+  font-family: Inter;
+  font-size: 27px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 100%; /* 27px */
+}
+
+.embroidery-image {
+  width: 100%;
+}
+.embroidery-color-and-text {
+  display: flex;
+}
+.acket-embroidery-choice-user-input {
+  width: 60%;
+}
+.jacket-embroidery-choice {
+  width: 40%;
+}
+/* Embroidery Container Styling */
+.embroidery-color-and-text {
+  display: flex;
+  gap: 20px;
+}
+.jacket-embroidery-choice-user-input {
+  width: 60%;
+}
+/* Embroidery Location Selection */
+.jacket-embroidery-choice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.jacket-embroidery-choice p {
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+/* Color Picker Container */
+.color-picker-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Individual Color Circle Styling */
+.color-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+/* Hover Effect for Color Circles */
+.color-circle:hover {
+  transform: scale(1.1);
+}
+
+/* Selected Color Circle Styling */
+.color-circle.selected {
+  border-color: #000;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Embroidery Text Input Styling */
+.embroidery-text-input input {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  margin-top: 5px;
+}
+
+/* Apply Embroidery Button Styling */
+#apply-embroidery-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  align-self: flex-start;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+#apply-embroidery-button:hover {
+  background-color: #45a049;
+}
+
+/* Embroidery Location Option Styling */
+.color-picker-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.color-circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.color-circle.selected {
+  border-color: #000;
+}
+/* Styles for the measurement image and inputs */
+#pantsMeasurementWrapper {
+  position: relative;
+  text-align: center;
+}
+
+#pantsMeasurementImage {
+  max-width: 30%;
+  height: auto;
+}
+
+/* Common styles for measurement inputs */
+.measurement-input {
+  position: absolute;
+  /* Initial positions, adjust as needed */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  text-align: start;
+  flex-direction: column;
+}
+
+.measurement-input label {
+  margin-right: 5px;
+}
+
+.measurement-input input {
+  width: 60px;
+  background: #eee;
+  border: none;
+  height: 29px;
+}
+
+/* Styles for the lines */
+.measurement-input .line {
+  width: 50px;
+  background-color: black;
+  /* Adjust height and position as needed */
+  height: 1px;
+  order: -1;
+}
+#WaistMeasurement {
+  top: 11%;
+  left: 35%;
+}
+#CrotchDepthMeasurement {
+  left: 33.5%;
+  top: 22.5%;
+}
+#CrotchDepthMeasurement .line {
+  width: 280px;
+}
+#WaistMeasurement .line {
+  width: 176px;
+}
+#SeatMeasurement {
+  left: 27%;
+  top: 34%;
+}
+
+#SeatMeasurement .line {
+  width: 260px;
+}
+
+#HipsMeasurement {
+  left: 67%;
+  top: 28%;
+  text-align: end;
+  align-items: end;
+}
+#ThighMeasurement {
+  left: 69%;
+  top: 42%;
+  text-align: end;
+  align-items: end;
+}
+#ThighMeasurement .line {
+  width: 168px;
+}
+#HipsMeasurement .line {
+  width: 151px;
+}
+#OutseamMeasurement .line {
+  width: 165px;
+}
+#OutseamMeasurement {
+  left: 71.5%;
+  top: 57%;
+  text-align: end;
+  align-items: end;
+}
+#KneeMeasurement {
+  left: 29.5%;
+  top: 60%;
+}
+#InseamMeasurement {
+  left: 31.7%;
+  top: 80%;
+}
+#AnkleMeasurement {
+  left: 72%;
+  top: 96.5%;
+  text-align: end;
+  align-items: end;
+}
+#AnkleMeasurement .line {
+  width: 150px;
+}
+
+#InseamMeasurement .line {
+  width: 226px;
+}
+#KneeMeasurement .line {
+  width: 226px;
+}
+
+body:has(#pantsMeasurementImage) #arrow,
+body:has(#pantsMeasurementImage) #resetCameraButton {
+  display: none;
+}
+
+.card_cardContainer {
+  position: relative;
+  cursor: pointer;
+  display: inline-block;
+  margin: 10px;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+}
+
+div .image-pants-pleat,
+div .image-pants-cut {
+  height: 64px;
+  object-fit: contain;
+}
+
+.card_cardImageContainer {
+  position: relative;
+  width: 30%;
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.card_cardImage {
+  width: 50%;
+  height: 50%;
+  object-fit: cover;
+}
+
+.card_itemAmountContainer {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+.embroidery-color-and-text-input {
+  width: 60%;
+}
+
+.part-option {
+  width: 100%;
+  border-radius: 7px;
+}
+
+.card_cardDetails {
+  display: block;
+  padding: 8px 20px;
+  text-align: left;
+  width: 50%;
+}
+
+.embroidery-customization {
+  position: relative;
+}
+
+div.card_cardImageContainer > .image-pants-pleat:nth-child(1),
+div.card_cardImageContainer > .image-pants-cut:nth-child(1) {
+  border: 1px solid black;
+  border-top-left-radius: 7px;
+}
+
+div.card_cardImageContainer > .image-pants-pleat:nth-child(2),
+div.card_cardImageContainer > .image-pants-cut:nth-child(2) {
+  border: 1px solid black;
+  border-left: none;
+  border-top-right-radius: 7px;
+}
+
+div.card_cardImageContainer > .image-pants-pleat:nth-child(3),
+div.card_cardImageContainer > .image-pants-cut:nth-child(3) {
+  border-left: 1px solid black;
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
+  border-bottom-left-radius: 7px;
+}
+
+div.card_cardImageContainer > .image-pants-pleat:nth-child(4),
+div.card_cardImageContainer > .image-pants-cut:nth-child(4) {
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
+  border-bottom-right-radius: 7px;
+}
+
+.remove-embroidery-button {
+  position: absolute;
+  top: 92%;
+  left: 2.5%;
+  padding: 10px 20px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  width: 40%;
+  cursor: pointer;
+  text-align: center;
+}
+
+/* .card_cardText {
+  font-size: 16px;
+  font-weight: bold;
+} */
+
+.card_arrowIcon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.card_cardContainer {
+  margin: 0 5px;
+}
+.card_cardContainer.selected {
+  border-radius: 7px;
+  border: 1px solid #1a1a1a;
+  background: #1a1a1a;
+  color: white;
+}
+.card_cardContainer.selected p {
+  color: white;
+}
+
+.card_hideMobileInfoText {
+  /* Add styles if needed */
+}
+.version {
+  position: absolute;
+  display: block;
+  top: 85%;
+  left: 5%;
+  color: gray;
+}
+@media screen and (max-width: 1024.9px) {
+  .card_small {
+    width: 150px;
+  }
+  .pants-image-wrapper {
+    width: 50%;
+  }
+  .pants-image-wrapper img {
+    width: 100%;
+  }
+  #resetCameraButton,
+  #backButton,
+  #nextButton {
+    border-radius: 21px;
+    background: #000;
+  }
+  body {
+    width: 100vw;
+    height: 100vh;
+  }
+  #sidePanel:has(.card_cardContainer) {
+    min-width: 100vw;
+  }
+  #stepTitle p {
+    margin: 0;
+  }
+  #sidePanel:has(.text-step3) {
+    gap: 0;
+  }
+  #sidePanel:has(.text-step3) .text-container {
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+  .mobile-colors {
+    padding: 7px 7px 5px 7px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .mobile-colors:has(.selected) {
+    background: #1a1a1a;
+  }
+  #sidePanel {
+    width: 100vw;
+    overflow: hidden;
+    border-radius: 0;
+    height: 35vh;
+    justify-content: center;
+  }
+
+  #sidePanel:has(.pants-item) {
+    justify-content: center;
+  }
+  .sub_accordion {
+    position: relative;
+    z-index: 9999;
+  }
+  #mobileLapelsSlider .cards-wrapper {
+    justify-content: space-around;
+  }
+  .step-1 .cards-wrapper {
+    justify-content: start;
+  }
+
+  .cards-wrapper {
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+    justify-content: center;
+    /* gap: 20px; */
+    /* height: 100%; */
+  }
+  .pockets-slider .card_cardImageContainer {
+    height: 148px;
+  }
+  .pockets-slider .card_cardContainer {
+    height: 148px;
+    width: 200px;
+  }
+  .step-1 .cards-wrapper .card_cardContainer:last-child {
+    margin-right: 5px;
+  }
+  .step-1 .cards-wrapper .card_cardContainer {
+    justify-content: start;
+    width: 100%;
+    max-width: 150px;
+  }
+  .step-1 {
+    align-items: end;
+  }
+  .step-1 .card_cardDetails {
+    padding: 6px;
+  }
+  #chooseGarmentContainer .card_cardImage {
+    width: 100%;
+    height: 140px;
+  }
+  .cards-wrapper .card_cardContainer {
+    flex: 0 0 auto;
+    /* Adjust the width as needed */
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  #chooseGarmentContainer .card_cardContainer {
+    width: 50%;
+  }
+  .controls button {
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+  .step-2 .design-options .card_cardImageContainer {
+    width: 100%;
+  }
+  .design-options {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    /*     gap: 20px; */
+    justify-content: center;
+    padding: 30px;
+  }
+  .cards-wrapper .card_cardContainer.part-option {
+    max-width: 150px;
+    /* padding: 5px;
+    margin: 10px 5px; */
+    width: 30%;
+  }
+  .part-option p {
+    color: #2d2d2c;
+    text-align: center;
+    font-family: "Inter", sans-serif;
+    font-size: 10.656px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    margin-bottom: 0;
+  }
+  .design-options .card_cardContainer {
+    /* width: 50%; */
+    max-width: 150px;
+  }
+  #mobileBackSlider .part-option {
+    padding: 5px;
+    max-width: 150px;
+    justify-content: center;
+    gap: 20px;
+  }
+  #mobileBackSlider .cards-wrapper {
+    justify-content: center;
+  }
+  .card_cardText {
+    font-family: "inter", sans-serif;
+    color: #2d2d2c;
+    text-align: center;
+    font-family: Inter;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin: 0;
+  }
+  #textureContainer {
+    justify-content: center;
+    align-items: center;
+    padding: 0 20px;
+    width: 100%;
+    position: relative;
+  }
+  .top-bottom-pockets-wrapper {
+    position: absolute;
+    z-index: 99;
+    display: flex;
+    gap: 30px;
+    top: 80%;
+  }
+  #mobilePocketsContainer .part-option.card_cardContainer {
+    width: 30%;
+    max-width: 150px;
+    /* padding: 5px;
+    margin: 10px 5px; */
+  }
+  #mobilePocketsContainer {
+    display: flex;
+    height: 100%;
+    align-items: center;
+  }
+  #sidePanel:has(.design-options) .text-container,
+  #sidePanel:has(.part-option) .text-container,
+  #sidePanel:has(#mobileCutSlider) .text-container {
+    display: none;
+  }
+  #textureContainer:has(.text-step3) {
+    flex-direction: column;
+  }
+  /* #stepTitle {
+    display: none;
+  } */
+  .text-container > p {
+    font-size: 11px;
+  }
+  #mobilePocketsContainer:has(
+      .card_cardContainer[data-mesh-name="4on2_pocket_5"]
+    ) {
+    justify-content: space-around;
+  }
+
+  #chooseGarmentContainer.step-2
+    .card_cardContainer[data-test-id="chooseJacket"],
+  #chooseGarmentContainer.step-2
+    .card_cardContainer[data-test-id="chooseJacket"] {
+    width: 30%;
+  }
+  /* .step-2 .part-option {
+    width: 94px;
+  } */
+  #chooseGarmentContainer {
+    justify-content: center;
+  }
+  #chooseGarmentContainer .card_cardImage {
+    object-fit: contain;
+  }
+  .cards-wrapper:has([data-test-id="Back"]) .card_cardContainer {
+    width: 40%;
+  }
+  .design-options:has([data-test-id="Back"]) .card_cardImage {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .next-back-btns {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    background-color: transparent;
+    padding: 10px;
+  }
+
+  /* Adjust the buttons */
+  #backButton,
+  #nextButton {
+    width: auto;
+    padding: 8px 35px;
+    font-size: 16px;
+  }
+  .swiper-free-mode > .swiper-wrapper {
+    gap: 20px;
+  }
+  body > main {
+    display: block;
+    flex-direction: column;
+  }
+  #sidePanel {
+    position: relative;
+    order: 2;
+
+    padding: 0;
+  }
+  /* Adjust content to prevent overlap with buttons */
+  #renderCanvas,
+  #sidePanel {
+  }
+
+  /* Optional: Hide elements if needed */
+  #arrow {
+    right: calc(50vw - 20px);
+    top: 60vh;
+  }
+  #resetCameraButton {
+    display: none;
+  }
+  .swiper-container {
+    width: 100%;
+  }
+
+  .swiper-slide {
+    width: 15%;
+    flex-shrink: 0;
+    box-sizing: border-box;
+  }
+  #jacketPartsSlider {
+    display: flex;
+    overflow-x: auto; /* let the browser handle horizontal scroll */
+    scroll-snap-type: x mandatory; /* optional if you want snapping */
+  }
+
+  #jacketPartsSlider > .card_cardContainer {
+    flex: 0 0 auto;
+    scroll-snap-align: start; /* optional if you want snapping */
+  }
+
+  .swiper-wrapper {
+    width: auto !important;
+  }
+
+  #textureContainer {
+    flex-wrap: nowrap;
+    overflow: hidden;
+
+    -webkit-overflow-scrolling: touch;
+    height: 100%;
+  }
+  .card_cardContainer {
+    flex: 0 0 auto;
+
+    margin: 0px;
+  }
+  .card_cardContainer {
+    flex-direction: column;
+  }
+  .card_arrowIcon {
+    display: none;
+  }
+  .dragging {
+    cursor: grabbing;
+  }
+  #chooseGarmentContainer .card_cardImageContainer {
+    background: #95959559;
+    width: 100%;
+  }
+  .step-2 .card_cardImageContainer {
+    width: 100%;
+  }
+  .step-1 .card_cardImageContainer {
+    width: 100%;
+    max-width: 150px;
+    border-radius: 5px;
+  }
+  .slider-container {
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+    white-space: nowrap; /* ensures everything in one row */
+    padding: 30px 0;
+    margin: 0; /* remove extra margin */
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    align-items: center;
+  }
+
+  .slider-wrapper {
+    display: flex;
+    cursor: grab;
+    will-change: transform;
+  }
+  .choice-container-step3 > div > p {
+    line-height: 1.3;
+  }
+  .slide {
+    min-width: 250px; /* Adjust based on your design */
+    flex-shrink: 0;
+    margin-right: 15px; /* Space between slides */
+  }
+  div.canvas-container {
+    height: 65vh;
+  }
+  .pleat-image img {
+    width: 100%;
+  }
+  .back-svg-slider {
+    width: 18px;
+    height: 18px;
+  }
+  .choice-container-step3 {
+    order: 2;
+  }
+  /* Hide elements when the 'hidden' class is applied */
+  .hidden {
+    display: none;
+  }
+
+  /* Styles for Characters Input */
+  .characters-input {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .characters-input label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .characters-input input {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  /* Optional: Add focus and hover effects */
+  .embroidery-button:hover,
+  .embroidery-button:focus,
+  .embroidery-button:active {
+    background: #1a1a1a;
+  }
+  .embroidery-button.active {
+    background-color: #1a1a1a;
+    color: #fff; /* optional text color change */
+  }
+  .mobile-embroidery-buttons {
+    order: -1;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  .embroidery-text {
+    margin-bottom: 5px;
+    text-align: center;
+  }
+  .text-step3 {
+    order: -2;
+  }
+  * {
+    font-family: "Inter", sans-serif;
+  }
+  .embroidery-input::placeholder {
+    padding: 0;
+    color: #818181;
+    font-weight: 200;
+  }
+  .embroidery-input {
+    color: #000;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    width: 100%;
+    letter-spacing: 3px;
+    border: none;
+    border-bottom: 0.5px solid #000;
+    margin-bottom: 10px;
+  }
+  /* Style selected color options */
+  .color-option.selected {
+    border: 2px solid #000;
+  }
+
+  /* Back Button Styling */
+  .back-button {
+    background-color: transparent; /* Light gray background */
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-bottom: 20px; /* Space below the button */
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  /* Back Button Styling */
+  .back-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    align-self: flex-start; /* Align to the start */
+    order: -1;
+    position: absolute;
+    z-index: 99999;
+    top: -10px;
+    left: 10px;
+  }
+
+  .back-button:hover {
+    background-color: #e0e0e0;
+  }
+
+  .back-button:hover {
+    background-color: #e0e0e0; /* Darker gray on hover */
+  }
+
+  .susu-pcons {
+    color: #2d2d2c;
+    text-align: center;
+    font-family: Inter;
+    font-size: 11px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+  .step-1 .card_cardContainer.card_small {
+    max-width: 150px;
+    width: 100%;
+    justify-content: start;
+  }
+  .cards-wrapper:has(.card_cardContainer.card_small) .card_cardImage {
+    height: 100%;
+  }
+  div .back-to-cat {
+    position: absolute;
+    z-index: 2;
+    left: calc(100vw - 120.405px);
+    top: 2%;
+    padding: 8px 35px;
+    font-size: 10px;
+  }
+  #mobilePocketsSliderWrapper {
+    justify-self: start;
+  }
+  .step-1 .back-to-cat {
+    position: absolute;
+    z-index: 2;
+    left: calc(50% - 65px);
+    top: 75%;
+    padding: 8px 35px;
+    font-size: 16px;
+  }
+  .card_cardDetails {
+    width: 100%;
+  }
+  .card_small .card_cardDetails {
+    display: none;
+  }
+  .text-step3 {
+    display: none;
+  }
+  #stepTitle > p:nth-child(2) {
+    display: none;
+  }
+  .choice-container-step3 > div {
+    width: 22%;
+    max-width: 150px;
+  }
+  #colorChoices .color-option {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    border: none;
+    max-width: 160px;
+    cursor: pointer;
+  }
+  #colorChoices .color-option[data-color="#0000FF"] {
+    border-radius: 10px;
+    border: 1px solid #000;
+  }
+  .embroidery-button {
+    border-radius: 21px;
+    background: #818181;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 10px 20px;
+
+    line-height: 1;
+  }
+  .color-options {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    width: 75%;
+    margin: 0 auto;
+  }
+  .color-options.hidden {
+    display: none;
+  }
+  #embroideryLocationsContainer {
+    width: 100%;
+    height: 100%;
+  }
+  #embroideryLocationsContainer img {
+    width: 100%;
+    height: 100%;
+  }
+  #sidePanel {
+    /* gap: 15px; */
+    padding: 10px 0;
+  }
+  .jacket-embroidery-choice p {
+    font-size: 10px;
+  }
+}
+.card_small:has(.susu-pcons) .card_infoSpaceContainer {
+  display: none;
+}
+.arrow-right {
+  width: 20px;
+  height: 20px;
+}
+.card_small .card_cardImage {
+  width: 100%;
+  border-radius: 10px;
+  padding: 4px;
+}
+.canvas-container {
+  height: 100vh;
+}
+.part-option:hover p,
+.part-option:hover p,
+.part-option:hover p,
+.part-option:hover p {
+  color: white;
+}
+.part-option:hover,
+.part-option:hover,
+.part-option:hover,
+.part-option:hover {
+  background-color: #1a1a1a;
+  color: white;
+}
+.selected-back,
+.selected-lapel,
+.selected-bottom-pocket,
+.selected-top-pocket {
+  background-color: #1a1a1a;
+  color: white;
+}
+#embroideryChoices img {
+  border-radius: 10px;
+}
+.selected-back p,
+.selected-lapel p,
+.selected-bottom-pocket p,
+.selected-top-pocket p {
+  color: white;
+}
+.top-bottom-btns {
+  padding: 10px 20px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  z-index: 99999;
+  cursor: pointer;
+  text-align: center;
+}
+.back-to-cat {
+  padding: 10px 20px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  z-index: 99999;
+  cursor: pointer;
+  text-align: center;
+  position: sticky;
+  top: 0%;
+  left: 75%;
+  margin-bottom: -95px;
+}

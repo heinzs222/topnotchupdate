@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Babylon.js Example</title>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"
+    ></script>
+    <script type="text/javascript">
+      // Replace 'YOUR_USER_ID' with your actual EmailJS user ID
+      emailjs.init("ClNU70DWd1HeFcB4f");
+    </script>
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Advent+Pro:ital,wght@0,100..900;1,100..900&family=Dancing+Script:wght@400..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- GSAP Core -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <!-- Draggable Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Draggable.min.js"></script>
+
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylon.glTF2FileLoader.js"></script>
+    <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+
+  <body>
+    <main>
+      <div class="canvas-container">
+        <canvas id="renderCanvas" style="width: 100%"></canvas>
+      </div>
+      <div id="sidePanel">
+        <div class="text-container" id="stepTitle">
+          <p>Here we’ve curated a selection of fabrics that best suits you.</p>
+          <p>
+            Please choose your preferred fabric from the options below to
+            proceed to the next step.
+          </p>
+        </div>
+        <select id="batchSelector"></select>
+        <div id="textureContainer"></div>
+        <div class="next-back-btns">
+          <a id="backButton">Back</a>
+          <a id="nextButton">Next</a>
+          <div id="tooltip"></div>
+          <button id="resetCameraButton">Reset Camera</button>
+        </div>
+        <span class="version">v0.8</span>
+      </div>
+      <img id="arrow" src="./assets/arrow.svg" />
+
+      <script type="module" src="script.js"></script>
+    </main>
+  </body>
+</html>
