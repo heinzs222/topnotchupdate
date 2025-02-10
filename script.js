@@ -2191,7 +2191,7 @@ document.addEventListener("DOMContentLoaded", function () {
     imagesToShow.forEach((item) => {
       const img = document.createElement("img");
       img.className = "card_cardImage";
-
+      img.loading = "lazy";
       const folderPath = `./assets/fabric/${categoryKey}/${subCategoryKey}/`;
       img.src = folderPath + item;
       img.alt = item;
@@ -2349,7 +2349,7 @@ document.addEventListener("DOMContentLoaded", function () {
     images.forEach((imgName) => {
       const img = document.createElement("img");
       img.className = "card_cardImage";
-
+      img.loading = "lazy";
       img.src = folderPath + imgName;
       img.alt = imgName;
       img.style.touchAction = "pan-y;";
@@ -2431,7 +2431,7 @@ document.addEventListener("DOMContentLoaded", function () {
   //   imagesToShow.forEach((item) => {
   //     const img = document.createElement("img");
   //     img.className = "card_cardImage";
-  //
+  //  img.loading = "lazy";
   //     img.src = `./assets/fabric/business/${item}.webp`;
   //     img.alt = item;
   //     imageContainer.appendChild(img);
@@ -2485,7 +2485,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const img = document.createElement("img");
     img.className = "card_cardImage";
-
+    img.loading = "lazy";
     img.src = folderPath + item;
     img.alt = item;
     imageContainer.appendChild(img);
