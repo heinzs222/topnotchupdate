@@ -622,29 +622,6 @@ document.addEventListener("DOMContentLoaded", function () {
     switchPartMesh(partName, meshName);
   }
 
-  function rotateModel180() {
-    const fps = 60;
-    const durationSeconds = 1.0;
-    const totalFrames = fps * durationSeconds;
-    const currentRotation = parentNode.rotation.y;
-    const targetRotation = currentRotation + Math.PI;
-    const rotationAnim = new BABYLON.Animation(
-      "rotateModel180",
-      "rotation.y",
-      fps,
-      BABYLON.Animation.ANIMATIONTYPE_FLOAT,
-      BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
-    );
-    rotationAnim.setKeys([
-      { frame: 0, value: currentRotation },
-      { frame: totalFrames, value: targetRotation },
-    ]);
-    scene.beginAnimation(parentNode, 0, totalFrames, false);
-
-    parentNode.rotation.y = targetRotation;
-    console.log(`Model rotated 180° to Y=${targetRotation}`);
-  }
-
   function createMobileJacketPartCard(partName) {
     if (partName === "Back") {
       return `
@@ -1555,6 +1532,37 @@ document.addEventListener("DOMContentLoaded", function () {
       );
     }
   }
+
+  // Wrap the entire #sidePanel content in a new div for widescreen only.
+  function wrapSidePanelContent(step) {
+    // Only wrap on widescreen: if the viewport is mobile (<=1024.9px), do nothing.
+    if (window.matchMedia("(max-width: 1024.9px)").matches) return;
+
+    const sidePanel = document.getElementById("sidePanel");
+    if (!sidePanel) return;
+
+    // Remove any previous widescreen wrapper (assumed to have the class "widescreen-step")
+    const existingWrapper = sidePanel.querySelector(".widescreen-step");
+    if (existingWrapper) {
+      // Move its children back into sidePanel
+      while (existingWrapper.firstChild) {
+        sidePanel.insertBefore(existingWrapper.firstChild, existingWrapper);
+      }
+      existingWrapper.remove();
+    }
+
+    // Create a new wrapper with a class that indicates the step (e.g. "step-3-ws")
+    const wrapper = document.createElement("div");
+    wrapper.classList.add(`step-${step}-ws`, "widescreen-step");
+
+    // Move all current children of sidePanel into the new wrapper
+    while (sidePanel.firstChild) {
+      wrapper.appendChild(sidePanel.firstChild);
+    }
+    // Append the new wrapper back into sidePanel
+    sidePanel.appendChild(wrapper);
+  }
+
   function initializeStep(currentStep) {
     updateStepClass(currentStep);
     const stepTitle = document.getElementById("stepTitle");
@@ -1577,16 +1585,9 @@ document.addEventListener("DOMContentLoaded", function () {
         <p>Please choose your preferred fabric group from the options below to proceed to the next step.</p>
       `;
         batchSelector.style.display = "none";
-
         loadJacketBasedOnUserChoices();
         initializeTextureButtons();
-
-        if (window.matchMedia("(max-width: 1024.9px)").matches) {
-          textureContainer.style.display = "flex";
-        } else {
-          textureContainer.style.display = "flex";
-        }
-
+        textureContainer.style.display = "flex";
         break;
 
       case 2:
@@ -1990,6 +1991,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         break;
     }
+    wrapSidePanelContent(currentStep);
   }
 
   function setupPantsMeasurementListeners() {
@@ -3114,6 +3116,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (mode === "top") {
       const container = document.getElementById("mobilePocketsContainer");
+      container.classList.add("cards-wrapper");
       if (!container) return;
       container.innerHTML = "";
       filteredOptions.forEach((item) => {

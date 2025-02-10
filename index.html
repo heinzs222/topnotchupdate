@@ -34,30 +34,34 @@
 
   <body>
     <main>
-      <div class="canvas-container">
-        <canvas id="renderCanvas" style="width: 100%"></canvas>
-      </div>
-      <div id="sidePanel">
-        <div class="text-container" id="stepTitle">
-          <p>Here we’ve curated a selection of fabrics that best suits you.</p>
-          <p>
-            Please choose your preferred fabric from the options below to
-            proceed to the next step.
-          </p>
+      <div class="content-wrapper">
+        <div class="canvas-container">
+          <canvas id="renderCanvas" style="width: 100%"></canvas>
         </div>
-        <select id="batchSelector"></select>
-        <div id="textureContainer"></div>
-        <div class="next-back-btns">
-          <a id="backButton">Back</a>
-          <a id="nextButton">Next</a>
-          <div id="tooltip"></div>
-          <button id="resetCameraButton">Reset Camera</button>
+        <div id="sidePanel">
+          <div class="text-container" id="stepTitle">
+            <p>
+              Here we’ve curated a selection of fabrics that best suits you.
+            </p>
+            <p>
+              Please choose your preferred fabric from the options below to
+              proceed to the next step.
+            </p>
+          </div>
+          <select id="batchSelector"></select>
+          <div id="textureContainer"></div>
+          <div class="next-back-btns">
+            <a id="backButton">Back</a>
+            <a id="nextButton">Next</a>
+            <div id="tooltip"></div>
+            <button id="resetCameraButton">Reset Camera</button>
+          </div>
+          <span class="version">v0.8</span>
         </div>
-        <span class="version">v0.8</span>
-      </div>
-      <img id="arrow" src="./assets/arrow.svg" />
+        <img id="arrow" src="./assets/arrow.svg" />
 
-      <script type="module" src="script.js"></script>
+        <script type="module" src="script.js"></script>
+      </div>
     </main>
   </body>
 </html>

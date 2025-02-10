@@ -41,6 +41,7 @@ button {
 .card_infoSpaceContainer * {
   width: 100%;
 }
+
 /* Styles for select elements */
 select {
   appearance: none;
@@ -84,7 +85,16 @@ main {
   height: 100%;
   overflow: hidden;
 }
-
+.content-wrapper {
+  width: 100vw;
+  display: flex;
+}
+.widescreen-step {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 /* Add this new CSS rule */
 .texture-container {
   max-height: 80vh; /* Adjust based on your needs */
@@ -96,10 +106,6 @@ main {
 }
 /* Styles for side panel */
 #sidePanel {
-  position: absolute;
-  top: 0;
-
-  right: 0;
   width: 30vw;
   height: 100vh;
   border-radius: 0px 76px 76px 0px;
@@ -122,7 +128,7 @@ main {
   gap: 10px;
 
   justify-content: center;
-  align-items: center;
+  /* align-items: center; */
   row-gap: 15px;
 }
 #textureContainer:has(.accordion) .part-option {
@@ -841,6 +847,7 @@ div.card_cardImageContainer > .image-pants-cut:nth-child(4) {
     position: relative;
     z-index: 9999;
   }
+  #mobileBackSlider.cards-wrapper,
   #mobileLapelsSlider .cards-wrapper {
     justify-content: space-around;
   }
@@ -936,8 +943,11 @@ div.card_cardImageContainer > .image-pants-cut:nth-child(4) {
     justify-content: center;
     gap: 20px;
   }
-  #mobileBackSlider .cards-wrapper {
-    justify-content: center;
+
+  #mobileLapelsSlider.cards-wrapper,
+  #mobileBackSlider.cards-wrapper {
+    justify-content: space-around;
+    align-items: center;
   }
   .card_cardText {
     font-family: "inter", sans-serif;
@@ -1148,6 +1158,7 @@ div.card_cardImageContainer > .image-pants-cut:nth-child(4) {
   }
   div.canvas-container {
     height: 65vh;
+    width: 100vw;
   }
   .pleat-image img {
     width: 100%;
@@ -1369,7 +1380,11 @@ div.card_cardImageContainer > .image-pants-cut:nth-child(4) {
   .jacket-embroidery-choice p {
     font-size: 10px;
   }
+  .content-wrapper {
+    flex-direction: column;
+  }
 }
+
 .card_small:has(.susu-pcons) .card_infoSpaceContainer {
   display: none;
 }
@@ -1384,6 +1399,7 @@ div.card_cardImageContainer > .image-pants-cut:nth-child(4) {
 }
 .canvas-container {
   height: 100vh;
+  width: 70vw;
 }
 .part-option:hover p,
 .part-option:hover p,
