@@ -4014,8 +4014,10 @@ document.addEventListener("DOMContentLoaded", function () {
     .addEventListener("click", resetCamera);
   preloadAllImages();
   waitForAllImages().then(() => {
-    console.log("All images have loaded.");
-    hideLoader();
+    setTimeout(() => {
+      console.log("All images have loaded and rendered.");
+      hideLoader();
+    }, 8000); // 100ms delay – adjust as needed
   });
   const observer = new MutationObserver((mutationsList) => {
     for (const mutation of mutationsList) {
