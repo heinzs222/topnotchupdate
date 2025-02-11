@@ -19,19 +19,34 @@ document.addEventListener("DOMContentLoaded", function () {
   function preloadAllImages() {
     const imgs = document.querySelectorAll("img");
     imgs.forEach((img) => {
-      // Remove lazy-loading so the browser loads immediately
+      // Optionally remove lazy-loading to force immediate load:
       img.removeAttribute("loading");
       // Avoid duplicate preload hints by marking images that have been preloaded
       if (!img.dataset.preloaded) {
         preloadResponsiveImage({
           href: img.src,
-          srcset: img.getAttribute("srcset"), // Pass srcset if available
-          sizes: img.getAttribute("sizes"), // Pass sizes if available
+          srcset: img.getAttribute("srcset"),
+          sizes: img.getAttribute("sizes"),
         });
         img.dataset.preloaded = "true";
       }
     });
   }
+  function waitForAllImages() {
+    const imgs = document.querySelectorAll("img");
+    const imagePromises = Array.from(imgs).map((img) => {
+      return new Promise((resolve) => {
+        if (img.complete) {
+          resolve();
+        } else {
+          img.addEventListener("load", resolve);
+          img.addEventListener("error", resolve); // Resolve even if there's an error
+        }
+      });
+    });
+    return Promise.all(imagePromises);
+  }
+
   let mannequinRoot;
 
   let initialCameraRadius,
@@ -3993,4 +4008,8 @@ document.addEventListener("DOMContentLoaded", function () {
     .getElementById("resetCameraButton")
     .addEventListener("click", resetCamera);
   preloadAllImages();
+  waitForAllImages().then(() => {
+    console.log("All images have loaded.");
+    hideLoader();
+  });
 });
