@@ -181,12 +181,12 @@ document.addEventListener("DOMContentLoaded", function () {
         opacity: 0,
         duration: 1,
         ease: "power2.out",
-        // onComplete: function () {
-        //   const loader = document.getElementById("loader-top-notch");
-        //   if (loader) {
-        //     loader.style.display = "none";
-        //   }
-        // },
+        onComplete: function () {
+          const loader = document.getElementById("loader-top-notch");
+          if (loader) {
+            loader.style.zIndex = "-1";
+          }
+        },
       });
     }
 
