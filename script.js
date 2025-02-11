@@ -2,57 +2,6 @@ import EmailSender from "./emailSender.js";
 import { loaderTimeline } from "./loader.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-  let hideLoader; // Declare a variable in the global scope
-  function preloadResponsiveImage({
-    href,
-    srcset,
-    sizes,
-    crossorigin = "anonymous",
-  }) {
-    const link = document.createElement("link");
-    link.rel = "preload";
-    link.as = "image";
-    link.href = href;
-    link.crossOrigin = crossorigin; // add this attribute
-    if (srcset) {
-      link.setAttribute("imagesrcset", srcset);
-    }
-    if (sizes) {
-      link.setAttribute("imagesizes", sizes);
-    }
-    document.head.appendChild(link);
-  }
-
-  function preloadAllImages() {
-    const imgs = document.querySelectorAll("img");
-    imgs.forEach((img) => {
-      // Optionally remove lazy-loading to force immediate load:
-      img.removeAttribute("loading");
-      // Avoid duplicate preload hints by marking images that have been preloaded
-      if (!img.dataset.preloaded) {
-        preloadResponsiveImage({
-          href: img.src,
-          srcset: img.getAttribute("srcset"),
-          sizes: img.getAttribute("sizes"),
-        });
-        img.dataset.preloaded = "true";
-      }
-    });
-  }
-  function waitForAllImages() {
-    const imgs = document.querySelectorAll("img");
-    const imagePromises = Array.from(imgs).map((img) => {
-      return new Promise((resolve) => {
-        if (img.complete) {
-          resolve();
-        } else {
-          img.addEventListener("load", resolve);
-          img.addEventListener("error", resolve); // Resolve even if there's an error
-        }
-      });
-    });
-    return Promise.all(imagePromises);
-  }
   let mannequinRoot;
 
   let initialCameraRadius,
@@ -117,11 +66,14 @@ document.addEventListener("DOMContentLoaded", function () {
   let currentOrientation = "front";
 
   function getFabricPrice(filename) {
-    const baseName = filename.replace(/\.[^.]+$/, "");
+    // Remove the file extension (assumes one dot before extension)
+    const baseName = filename.replace(/\.[^.]+$/, ""); // e.g. "A52024063- $850"
+    // Use a regex to capture a dash followed by optional whitespace and then a price
     const match = baseName.match(/-\s*(\$[\d.]+)/);
     if (match) {
-      return match[1];
+      return match[1]; // e.g. "$850"
     }
+    // Fallback if no price is found
     return "$0.00";
   }
 
@@ -141,6 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (window.matchMedia("(max-width: 1024.9px)").matches) {
+      // For mobile, use the same keys as desktop for pockets.
       if (!userChoices.design.jacket["PocketsTop"]) {
         userChoices.design.jacket["PocketsTop"] = TOP_POCKETS[0];
         switchPartMesh("Pockets", TOP_POCKETS[0], "top");
@@ -172,17 +125,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     zoomToMesh = originalZoomToMesh;
   }
-  hideLoader = function () {
-    gsap.to(".loader-tn", {
-      opacity: 0,
-      duration: 1,
-      ease: "power2.out",
-    });
-  };
+
   function normalizeAngle(angle) {
     return angle % (2 * Math.PI);
   }
-
   const createScene = () => {
     scene = new BABYLON.Scene(engine);
     scene.clearColor = new BABYLON.Color3(0.937, 0.937, 0.937);
@@ -208,6 +154,7 @@ document.addEventListener("DOMContentLoaded", function () {
     scene.postProcesses.push(fxaa);
     if (camera.inputs.attached.touch) {
       camera.inputs.attached.touch.pinchPrecision = 30;
+
       camera.inputs.attached.touch.touchAngularSensibility = 10000;
     }
 
@@ -228,27 +175,36 @@ document.addEventListener("DOMContentLoaded", function () {
     highlightLayer = new BABYLON.HighlightLayer("hl1", scene);
     let modelsLoaded = 0;
     const modelsToLoad = 4;
+    function hideLoader() {
+      // Option 1: Fade out then remove/hide the loader element
+      gsap.to(".loader-tn", {
+        opacity: 0,
+        duration: 1,
+        ease: "power2.out",
+        // onComplete: function () {
+        //   const loader = document.getElementById("loader-top-notch");
+        //   if (loader) {
+        //     loader.style.display = "none";
+        //   }
+        // },
+      });
+    }
 
     const onModelLoaded = () => {
       modelsLoaded++;
+
       if (modelsLoaded === modelsToLoad) {
         parentNode.rotation.y = Math.PI / 2;
         initialRotationY = parentNode.rotation.y;
         currentRotationY = initialRotationY;
         currentOrientation = "front";
-        applyTexture("./assets/fabric/All Fabrics/A52024006- $850.webp", {
-          href: "./assets/fabric/All Fabrics/A52024006- $850.webp",
-          srcset:
-            "./assets/fabric/All Fabrics/A52024006- $850_small.webp 500w, ./assets/fabric/All Fabrics/A52024006- $850_medium.webp 1000w, ./assets/fabric/All Fabrics/A52024006- $850_large.webp 1500w",
-          sizes: "100vw",
-        });
+        applyTexture("./assets/fabric/All Fabrics/A52024006- $850.webp");
         centerModel();
         selectDefaultJacketParts();
         hideLoader();
         transitionToStep(step);
       }
     };
-
     function getPartNameFromMeshName(meshName) {
       if (meshName.startsWith("4on2_Back")) {
         return "Back";
@@ -260,7 +216,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return null;
       }
     }
-
     BABYLON.SceneLoader.ImportMesh("", "./", "jacket.glb", scene, (meshes) => {
       meshes.forEach((mesh) => {
         mesh.material = material;
@@ -268,12 +223,15 @@ document.addEventListener("DOMContentLoaded", function () {
         jacketMeshes.push(mesh);
         mesh.renderingGroupId = 2;
         partMeshes[mesh.name] = mesh;
+
         let partName = getPartNameFromMeshName(mesh.name);
         if (partName) {
           currentPartMeshes[partName] = mesh;
           partOptionsMeshes[partName][mesh.name] = mesh;
         }
+
         mesh.actionManager = new BABYLON.ActionManager(scene);
+
         mesh.actionManager.registerAction(
           new BABYLON.ExecuteCodeAction(
             BABYLON.ActionManager.OnPointerOverTrigger,
@@ -283,12 +241,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 const currentMesh = currentPartMeshes[partName];
                 highlightLayer.addMesh(currentMesh, BABYLON.Color3.White());
                 canvas.style.cursor = "pointer";
+
                 tooltip.style.display = "block";
                 tooltip.innerHTML = partName;
               }
             }
           )
         );
+
         mesh.actionManager.registerAction(
           new BABYLON.ExecuteCodeAction(
             BABYLON.ActionManager.OnPointerOutTrigger,
@@ -298,11 +258,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 const currentMesh = currentPartMeshes[partName];
                 highlightLayer.removeMesh(currentMesh);
                 canvas.style.cursor = "default";
+
                 tooltip.style.display = "none";
               }
             }
           )
         );
+
         mesh.actionManager.registerAction(
           new BABYLON.ExecuteCodeAction(
             BABYLON.ActionManager.OnPickDownTrigger,
@@ -500,6 +462,7 @@ document.addEventListener("DOMContentLoaded", function () {
     scene.onPointerDown = function (evt, pickResult) {
       if (!pickResult.hit) {
         highlightLayer.removeAllMeshes();
+
         document
           .querySelectorAll(".part-item")
           .forEach((item) => item.classList.remove("selected"));
@@ -528,11 +491,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
     });
+
     return scene;
   };
+
   scene = createScene();
   engine.runRenderLoop(() => scene && scene.render());
   window.addEventListener("resize", () => engine.resize());
+
   function setupPartHoverHighlight() {
     const partOptionButtons = document.querySelectorAll(".part-option");
     const partItems = document.querySelectorAll(".part-item");
@@ -692,7 +658,7 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="card_cardContainer" data-test-id="${partName}" tabindex="0">
       <div class="card_cardImageContainer">
         <!-- Back Design Images (Assuming 4 options) -->
-        <img  class="card_cardImage image-jacket-back"  src="./assets/jacket/back/jacketback.png" alt="Classic Back">
+        <img loading="lazy" class="card_cardImage image-jacket-back"  src="./assets/jacket/back/jacketback.png" alt="Classic Back">
         <!-- Show # of images if you like -->
         <div class="card_itemAmountContainer" data-test-id="item-amount">4</div>
       </div>
@@ -725,7 +691,7 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="card_cardContainer" data-test-id="${partName}" tabindex="0">
       <div class="card_cardImageContainer">
         <!-- Lapel Design Images (Assuming 3 options) -->
-        <img  class="card_cardImage image-jacket-lapels"  src="./assets/jacket/lapel/jacketlapel.png" alt="Classic Lapel">
+        <img loading="lazy" class="card_cardImage image-jacket-lapels"  src="./assets/jacket/lapel/jacketlapel.png" alt="Classic Lapel">
         <div class="card_itemAmountContainer" data-test-id="item-amount">3</div>
       </div>
       <div class="card_cardDetails">
@@ -757,7 +723,7 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="card_cardContainer" data-test-id="${partName}" tabindex="0">
       <div class="card_cardImageContainer">
         <!-- Pockets Design Images (Assuming 4 options) -->
-        <img  class="card_cardImage image-jacket-pockets"  src="./assets/jacket/pockets/jacketpockets.png" alt="Single Pocket">
+        <img loading="lazy" class="card_cardImage image-jacket-pockets"  src="./assets/jacket/pockets/jacketpockets.png" alt="Single Pocket">
         <div class="card_itemAmountContainer" data-test-id="item-amount">8</div>
       </div>
       <div class="card_cardDetails">
@@ -791,10 +757,10 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="card_cardContainer" data-test-id="${partName}" tabindex="0">
       <div class="card_cardImageContainer">
         <!-- 4 CUT IMAGES -->
-        <img  class="card_cardImage image-pants-cut"  src="./assets/pants/cut/cut1.png" alt="Extra Slim">
-        <img  class="card_cardImage image-pants-cut"  src="./assets/pants/cut/cut2.png" alt="Slim">
-        <img  class="card_cardImage image-pants-cut"  src="./assets/pants/cut/cut3.png" alt="Straight">
-        <img  class="card_cardImage image-pants-cut"  src="./assets/pants/cut/cut4.png" alt="Classic">
+        <img loading="lazy" class="card_cardImage image-pants-cut"  src="./assets/pants/cut/cut1.png" alt="Extra Slim">
+        <img loading="lazy" class="card_cardImage image-pants-cut"  src="./assets/pants/cut/cut2.png" alt="Slim">
+        <img loading="lazy" class="card_cardImage image-pants-cut"  src="./assets/pants/cut/cut3.png" alt="Straight">
+        <img loading="lazy" class="card_cardImage image-pants-cut"  src="./assets/pants/cut/cut4.png" alt="Classic">
         <!-- Show # of images if you like -->
         <div class="card_itemAmountContainer" data-test-id="item-amount">4</div>
       </div>
@@ -827,10 +793,10 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="card_cardContainer" data-test-id="${partName}" tabindex="0">
       <div class="card_cardImageContainer">
         <!-- 5 PLEAT IMAGES -->
-        <img  class="card_cardImage image-pants-pleat"  src="./assets/pants/pleat/pleat1.png" alt="Pleat 1">
-        <img  class="card_cardImage image-pants-pleat"  src="./assets/pants/pleat/pleat2.png" alt="Pleat 2">
-        <img  class="card_cardImage image-pants-pleat"  src="./assets/pants/pleat/pleat3.png" alt="Pleat 3">
-        <img  class="card_cardImage image-pants-pleat"  src="./assets/pants/pleat/pleat4.png" alt="Pleat 4">
+        <img loading="lazy" class="card_cardImage image-pants-pleat"  src="./assets/pants/pleat/pleat1.png" alt="Pleat 1">
+        <img loading="lazy" class="card_cardImage image-pants-pleat"  src="./assets/pants/pleat/pleat2.png" alt="Pleat 2">
+        <img loading="lazy" class="card_cardImage image-pants-pleat"  src="./assets/pants/pleat/pleat3.png" alt="Pleat 3">
+        <img loading="lazy" class="card_cardImage image-pants-pleat"  src="./assets/pants/pleat/pleat4.png" alt="Pleat 4">
  
         <!-- Show # of images if you like -->
         <div class="card_itemAmountContainer" data-test-id="item-amount">5</div>
@@ -865,10 +831,10 @@ document.addEventListener("DOMContentLoaded", function () {
   <div class="card_cardContainer" data-test-id="${partName}" tabindex="0">
     <div class="card_cardImageContainer">
       <!-- Default Images -->
-      <img  class="card_cardImage"  src="./assets/fabric/business/E5101-38.webp" alt="E5101-38">
-      <img  class="card_cardImage"  src="./assets/fabric/business/E5102-38.webp" alt="E5102-38">
-      <img  class="card_cardImage"  src="./assets/fabric/business/E5103-38.webp" alt="E5103-38">
-      <img  class="card_cardImage"  src="./assets/fabric/business/E5104-38.webp" alt="E5104-38">
+      <img loading="lazy" class="card_cardImage"  src="./assets/fabric/business/E5101-38.webp" alt="E5101-38">
+      <img loading="lazy" class="card_cardImage"  src="./assets/fabric/business/E5102-38.webp" alt="E5102-38">
+      <img loading="lazy" class="card_cardImage"  src="./assets/fabric/business/E5103-38.webp" alt="E5103-38">
+      <img loading="lazy" class="card_cardImage"  src="./assets/fabric/business/E5104-38.webp" alt="E5104-38">
       <div class="card_itemAmountContainer" data-test-id="item-amount">25</div>
     </div>
     <div class="card_cardDetails">
@@ -1708,7 +1674,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <div id="chooseGarmentContainer" style="display: flex; gap: 20px;">
               <div class="card_cardContainer" data-test-id="chooseJacket" tabindex="0">
                 <div class="card_cardImageContainer">
-                  <img  class="card_cardImage"  src="./assets/jacketandpants/jacket.png" alt="Jacket">
+                  <img loading="lazy" class="card_cardImage"  src="./assets/jacketandpants/jacket.png" alt="Jacket">
                   <div class="card_itemAmountContainer" data-test-id="item-amount">Jacket</div>
                 </div>
                 <div class="card_cardDetails">
@@ -1717,7 +1683,7 @@ document.addEventListener("DOMContentLoaded", function () {
               </div>
               <div class="card_cardContainer" data-test-id="choosePants" tabindex="0">
                 <div class="card_cardImageContainer">
-                  <img  class="card_cardImage"  src="assets/jacketandpants/pant.png" alt="Pants">
+                  <img loading="lazy" class="card_cardImage"  src="assets/jacketandpants/pant.png" alt="Pants">
                   <div class="card_itemAmountContainer" data-test-id="item-amount">Pants</div>
                 </div>
                 <div class="card_cardDetails">
@@ -1771,43 +1737,43 @@ document.addEventListener("DOMContentLoaded", function () {
                 <!-- 8 images for Cut -->
                 <div id="pantsCutContainer" style="display: flex; flex-wrap: wrap;">
                   <div class="pants-item">
-                    <img  src="./assets/pants/cut/cut1.png" alt="Extra Slim">
+                    <img loading="lazy" src="./assets/pants/cut/cut1.png" alt="Extra Slim">
                     <p>Extra Slim</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/cut/cut2.png" alt="Slim">
+                    <img loading="lazy" src="./assets/pants/cut/cut2.png" alt="Slim">
                     <p>Slim</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/cut/cut3.png" alt="Straight">
+                    <img loading="lazy" src="./assets/pants/cut/cut3.png" alt="Straight">
                     <p>Straight</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/cut/cut4.png" alt="Classic">
+                    <img loading="lazy" src="./assets/pants/cut/cut4.png" alt="Classic">
                     <p>Classic</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/cut/cut5.png" alt="Relaxed Fit">
+                    <img loading="lazy" src="./assets/pants/cut/cut5.png" alt="Relaxed Fit">
                     <p>Relaxed Fit</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/cut/cut6.png" alt="Tapered Leg">
+                    <img loading="lazy" src="./assets/pants/cut/cut6.png" alt="Tapered Leg">
                     <p>Tapered Leg</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/cut/cut7.png" alt="Flat Front">
+                    <img loading="lazy" src="./assets/pants/cut/cut7.png" alt="Flat Front">
                     <p>Flat Front</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/cut/cut8.png" alt="Pleated Front">
+                    <img loading="lazy" src="./assets/pants/cut/cut8.png" alt="Pleated Front">
                     <p>Pleated Front</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/cut/cut9.png" alt="High waist">
+                    <img loading="lazy" src="./assets/pants/cut/cut9.png" alt="High waist">
                     <p>High waist</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/cut/cut10.png" alt="Low rise">
+                    <img loading="lazy" src="./assets/pants/cut/cut10.png" alt="Low rise">
                     <p>Low rise</p>
                   </div>
                 </div>
@@ -1819,23 +1785,23 @@ document.addEventListener("DOMContentLoaded", function () {
               <div class="sub_panel">
                  <div id="pantsCutContainer" style="display: flex; flex-wrap: wrap;">
                   <div class="pants-item">
-                    <img  src="./assets/pants/pleat/pleat1.png" alt="pleat">
+                    <img loading="lazy" src="./assets/pants/pleat/pleat1.png" alt="pleat">
                     <p>pleat</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/pleat/pleat2.png" alt="pleat">
+                    <img loading="lazy" src="./assets/pants/pleat/pleat2.png" alt="pleat">
                     <p>pleat</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/pleat/pleat3.png" alt="pleat">
+                    <img loading="lazy" src="./assets/pants/pleat/pleat3.png" alt="pleat">
                     <p>pleat</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/pleat/pleat4.png" alt="pleat">
+                    <img loading="lazy" src="./assets/pants/pleat/pleat4.png" alt="pleat">
                     <p>pleat</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/pleat/pleat5.png" alt="pleat">
+                    <img loading="lazy" src="./assets/pants/pleat/pleat5.png" alt="pleat">
                     <p>pleat</p>
                   </div>
                 </div>
@@ -1861,20 +1827,20 @@ document.addEventListener("DOMContentLoaded", function () {
           <!-- Embroidery Choices -->
           <div class="choice-container-step3" id="embroideryChoices">
             <div class="jacket-embroidery-choice">
-              <img  src="./assets/embroidery/behind-your-lapel.png" alt="Inner right chest pocket"/>
+              <img loading="lazy" src="./assets/embroidery/behind-your-lapel.png" alt="Inner right chest pocket"/>
               <p>Inner right chest pocket</p>
             </div>
             <div class="jacket-embroidery-choice">
-              <img  src="./assets/embroidery/inner-left-embroidery.png" alt="Inner left chest pocket"/>
+              <img loading="lazy" src="./assets/embroidery/inner-left-embroidery.png" alt="Inner left chest pocket"/>
               <p>Inner left chest pocket</p>
             </div>
             <div class="jacket-embroidery-choice">
-              <img  src="./assets/embroidery/inner-right-embroidery.png" alt="Under the collar flap"/>
+              <img loading="lazy" src="./assets/embroidery/inner-right-embroidery.png" alt="Under the collar flap"/>
               <p>Under the collar flap</p>
             </div>
             <!-- "No Embroidery" Option -->
             <div class="jacket-embroidery-choice no-embroidery">
-              <img  src="./assets/rectangle_115.webp" alt="No Embroidery"/>
+              <img loading="lazy" src="./assets/rectangle_115.webp" alt="No Embroidery"/>
               <p>No Embroidery</p>
             </div>
           </div>
@@ -1985,7 +1951,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </svg></button>
             <div class="embroidery-color-and-text">
               <div class="jacket-embroidery-choice">
-                <img  class="embroidery-image" src="./assets/rectangle_115.webp" alt="${
+                <img loading="lazy" class="embroidery-image" src="./assets/rectangle_115.webp" alt="${
                   embroidery.location
                 }">
                 <p>${embroidery.location}</p>
@@ -2072,7 +2038,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         textureContainer.innerHTML = `
         <div id="pantsMeasurementWrapper">
-          <img  id="pantsMeasurementImage" src="assets/pants/pants.png" alt="Pants Diagram">
+          <img loading="lazy" id="pantsMeasurementImage" src="assets/pants/pants.png" alt="Pants Diagram">
           <!-- Measurement inputs will be positioned over this image -->
           ${generatePantsMeasurementInputs()}
         </div>
@@ -2297,7 +2263,7 @@ document.addEventListener("DOMContentLoaded", function () {
     imagesToShow.forEach((item) => {
       const img = document.createElement("img");
       img.className = "card_cardImage";
-
+      img.loading = "lazy";
       const folderPath = `./assets/fabric/${categoryKey}/${subCategoryKey}/`;
       img.src = folderPath + item;
       img.alt = item;
@@ -2455,7 +2421,7 @@ document.addEventListener("DOMContentLoaded", function () {
     images.forEach((imgName) => {
       const img = document.createElement("img");
       img.className = "card_cardImage";
-
+      img.loading = "lazy";
       img.src = folderPath + imgName;
       img.alt = imgName;
       img.style.touchAction = "pan-y;";
@@ -2535,7 +2501,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const img = document.createElement("img");
     img.className = "card_cardImage";
-
+    img.loading = "lazy";
     img.src = folderPath + item;
     img.alt = item;
     imageContainer.appendChild(img);
@@ -2596,20 +2562,12 @@ document.addEventListener("DOMContentLoaded", function () {
     applyTexture(textureUrl);
     userChoices.texture = item; // Store the selected fabric file name
   }
-  let texturesToLoad = 0;
-  let texturesLoaded = 0;
-  function applyTexture(url, preloadOptions) {
+
+  function applyTexture(url) {
     if (!material) return;
     if (material.diffuseTexture && material.diffuseTexture.name === url) {
       return;
     }
-
-    // Preload the image if preloadOptions is provided.
-    // (You could also preload unconditionally if you always have a responsive version.)
-    if (preloadOptions) {
-      preloadResponsiveImage(preloadOptions);
-    }
-
     const texture = new BABYLON.Texture(
       url,
       scene,
@@ -4006,14 +3964,4 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("resetCameraButton")
     .addEventListener("click", resetCamera);
-  preloadAllImages();
-  waitForAllImages().then(() => {
-    // Wait for two animation frames to allow the browser to paint the images.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        console.log("All images have loaded and rendered.");
-        hideLoader();
-      });
-    });
-  });
 });
