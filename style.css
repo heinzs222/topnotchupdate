@@ -845,6 +845,7 @@ div.card_cardImageContainer > .image-pants-cut:nth-child(4) {
     linear-gradient(90deg, hsl(317, 13%, 6%), hsl(317, 13%, 6%));
   position: fixed;
   z-index: 999999999999999999999999999999999999999;
+  top: 0;
 }
 
 #demo {
