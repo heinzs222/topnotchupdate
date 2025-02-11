@@ -1,4 +1,5 @@
 import EmailSender from "./emailSender.js";
+import { loaderTimeline } from "./loader.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   let mannequinRoot;
@@ -174,6 +175,21 @@ document.addEventListener("DOMContentLoaded", function () {
     highlightLayer = new BABYLON.HighlightLayer("hl1", scene);
     let modelsLoaded = 0;
     const modelsToLoad = 4;
+    function hideLoader() {
+      // Option 1: Fade out then remove/hide the loader element
+      gsap.to(".loader-tn", {
+        opacity: 0,
+        duration: 1,
+        ease: "power2.out",
+        onComplete: function () {
+          const loader = document.getElementById("loader-top-notch");
+          if (loader) {
+            loader.style.display = "none";
+          }
+        },
+      });
+    }
+
     const onModelLoaded = () => {
       modelsLoaded++;
 
@@ -185,6 +201,7 @@ document.addEventListener("DOMContentLoaded", function () {
         applyTexture("./assets/fabric/All Fabrics/A52024006- $850.webp");
         centerModel();
         selectDefaultJacketParts();
+        hideLoader();
         transitionToStep(step);
       }
     };

@@ -32,7 +32,7 @@ button {
 #arrow {
   position: absolute;
   bottom: 20px;
-  right: 70vw;
+  right: calc(66vw - 20px);
   width: 40px;
   cursor: pointer;
   z-index: 10;
