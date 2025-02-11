@@ -4012,4 +4012,18 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("All images have loaded.");
     hideLoader();
   });
+  const observer = new MutationObserver((mutationsList) => {
+    for (const mutation of mutationsList) {
+      if (mutation.type === "childList") {
+        mutation.addedNodes.forEach((node) => {
+          if (node.tagName === "IMG") {
+            // You could attach a load/error listener here.
+            node.addEventListener("load", checkIfAllImagesLoaded);
+            node.addEventListener("error", checkIfAllImagesLoaded);
+          }
+        });
+      }
+    }
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
 });
