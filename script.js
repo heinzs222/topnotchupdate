@@ -1878,7 +1878,9 @@ document.addEventListener("DOMContentLoaded", function () {
           customizationContainer.innerHTML += `
           <div class="embroidery-customization" data-index="${index}">
             <h3>Embroidery ${index + 1}: ${embroidery.location}</h3>
-            <button class="remove-embroidery-button" data-index="${index}">Remove</button>
+            <button class="remove-embroidery-button" data-index="${index}"><svg class="remove-emb"xmlns="http://www.w3.org/2000/svg" fill="#000000" width="800px" height="800px" viewBox="0 0 256 256" id="Flat">
+  <path d="M202.82861,197.17188a3.99991,3.99991,0,1,1-5.65722,5.65624L128,133.65723,58.82861,202.82812a3.99991,3.99991,0,0,1-5.65722-5.65624L122.343,128,53.17139,58.82812a3.99991,3.99991,0,0,1,5.65722-5.65624L128,122.34277l69.17139-69.17089a3.99991,3.99991,0,0,1,5.65722,5.65624L133.657,128Z"/>
+</svg></button>
             <div class="embroidery-color-and-text">
               <div class="jacket-embroidery-choice">
                 <img loading="lazy" class="embroidery-image" src="./assets/rectangle_115.webp" alt="${
