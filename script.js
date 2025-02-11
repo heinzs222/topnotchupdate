@@ -166,7 +166,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     zoomToMesh = originalZoomToMesh;
   }
-
+  function hideLoader() {
+    gsap.to(".loader-tn", {
+      opacity: 0,
+      duration: 1,
+      ease: "power2.out",
+      onComplete: function () {
+        const loader = document.getElementById("loader-top-notch");
+        if (loader) {
+          loader.style.display = "none";
+        }
+      },
+    });
+  }
   function normalizeAngle(angle) {
     return angle % (2 * Math.PI);
   }
@@ -216,19 +228,6 @@ document.addEventListener("DOMContentLoaded", function () {
     highlightLayer = new BABYLON.HighlightLayer("hl1", scene);
     let modelsLoaded = 0;
     const modelsToLoad = 4;
-    function hideLoader() {
-      gsap.to(".loader-tn", {
-        opacity: 0,
-        duration: 1,
-        ease: "power2.out",
-        onComplete: function () {
-          const loader = document.getElementById("loader-top-notch");
-          if (loader) {
-            loader.style.display = "none";
-          }
-        },
-      });
-    }
 
     const onModelLoaded = () => {
       modelsLoaded++;
