@@ -201,7 +201,7 @@ document.addEventListener("DOMContentLoaded", function () {
         applyTexture("./assets/fabric/All Fabrics/A52024006- $850.webp");
         centerModel();
         selectDefaultJacketParts();
-        hideLoader();
+
         transitionToStep(step);
       }
     };
@@ -3964,4 +3964,8 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("resetCameraButton")
     .addEventListener("click", resetCamera);
+  setTimeout(() => {
+    console.log("All images have loaded and rendered.");
+    hideLoader();
+  }, 8000); // arbitrary delay
 });
