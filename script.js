@@ -177,7 +177,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const modelsToLoad = 4;
     function hideLoader() {
       // Option 1: Fade out then remove/hide the loader element
-      gsap.to("#demo", {
+      gsap.to(".loader-tn", {
         opacity: 0,
         duration: 1,
         ease: "power2.out",
