@@ -2562,12 +2562,15 @@ document.addEventListener("DOMContentLoaded", function () {
     applyTexture(textureUrl);
     userChoices.texture = item; // Store the selected fabric file name
   }
-
+  let texturesToLoad = 0;
+  let texturesLoaded = 0;
   function applyTexture(url) {
     if (!material) return;
     if (material.diffuseTexture && material.diffuseTexture.name === url) {
       return;
     }
+    texturesToLoad++; // Increase the total number of textures to load
+
     const texture = new BABYLON.Texture(
       url,
       scene,
@@ -2576,9 +2579,18 @@ document.addEventListener("DOMContentLoaded", function () {
       BABYLON.Texture.TRILINEAR_SAMPLINGMODE,
       () => {
         console.log(`Texture loaded: ${url}`);
+        texturesLoaded++;
+        // If all expected textures are loaded, hide the loader.
+        if (texturesLoaded === texturesToLoad) {
+          hideLoader();
+        }
       },
       (message, exception) => {
         console.error(`Failed to load texture: ${url}`, message, exception);
+        texturesLoaded++; // Count errors as loaded so we don’t hang forever.
+        if (texturesLoaded === texturesToLoad) {
+          hideLoader();
+        }
       }
     );
     texture.uScale = 5.0;
