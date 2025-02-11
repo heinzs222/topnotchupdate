@@ -177,12 +177,6 @@ document.addEventListener("DOMContentLoaded", function () {
       opacity: 0,
       duration: 1,
       ease: "power2.out",
-      onComplete: function () {
-        const loader = document.getElementById("loader-top-notch");
-        if (loader) {
-          loader.style.display = "none";
-        }
-      },
     });
   };
   function normalizeAngle(angle) {
@@ -4019,18 +4013,4 @@ document.addEventListener("DOMContentLoaded", function () {
       hideLoader();
     }, 8000); // 100ms delay – adjust as needed
   });
-  const observer = new MutationObserver((mutationsList) => {
-    for (const mutation of mutationsList) {
-      if (mutation.type === "childList") {
-        mutation.addedNodes.forEach((node) => {
-          if (node.tagName === "IMG") {
-            // You could attach a load/error listener here.
-            node.addEventListener("load", checkIfAllImagesLoaded);
-            node.addEventListener("error", checkIfAllImagesLoaded);
-          }
-        });
-      }
-    }
-  });
-  observer.observe(document.body, { childList: true, subtree: true });
 });
