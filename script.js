@@ -1,58 +1,58 @@
 import EmailSender from "./emailSender.js";
 import { loaderTimeline } from "./loader.js";
 
-let hideLoader; // Declare a variable in the global scope
-function preloadResponsiveImage({
-  href,
-  srcset,
-  sizes,
-  crossorigin = "anonymous",
-}) {
-  const link = document.createElement("link");
-  link.rel = "preload";
-  link.as = "image";
-  link.href = href;
-  link.crossOrigin = crossorigin; // add this attribute
-  if (srcset) {
-    link.setAttribute("imagesrcset", srcset);
-  }
-  if (sizes) {
-    link.setAttribute("imagesizes", sizes);
-  }
-  document.head.appendChild(link);
-}
-
-function preloadAllImages() {
-  const imgs = document.querySelectorAll("img");
-  imgs.forEach((img) => {
-    // Optionally remove lazy-loading to force immediate load:
-    img.removeAttribute("loading");
-    // Avoid duplicate preload hints by marking images that have been preloaded
-    if (!img.dataset.preloaded) {
-      preloadResponsiveImage({
-        href: img.src,
-        srcset: img.getAttribute("srcset"),
-        sizes: img.getAttribute("sizes"),
-      });
-      img.dataset.preloaded = "true";
+document.addEventListener("DOMContentLoaded", function () {
+  let hideLoader; // Declare a variable in the global scope
+  function preloadResponsiveImage({
+    href,
+    srcset,
+    sizes,
+    crossorigin = "anonymous",
+  }) {
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "image";
+    link.href = href;
+    link.crossOrigin = crossorigin; // add this attribute
+    if (srcset) {
+      link.setAttribute("imagesrcset", srcset);
     }
-  });
-}
-function waitForAllImages() {
-  const imgs = document.querySelectorAll("img");
-  const imagePromises = Array.from(imgs).map((img) => {
-    return new Promise((resolve) => {
-      if (img.complete) {
-        resolve();
-      } else {
-        img.addEventListener("load", resolve);
-        img.addEventListener("error", resolve); // Resolve even if there's an error
+    if (sizes) {
+      link.setAttribute("imagesizes", sizes);
+    }
+    document.head.appendChild(link);
+  }
+
+  function preloadAllImages() {
+    const imgs = document.querySelectorAll("img");
+    imgs.forEach((img) => {
+      // Optionally remove lazy-loading to force immediate load:
+      img.removeAttribute("loading");
+      // Avoid duplicate preload hints by marking images that have been preloaded
+      if (!img.dataset.preloaded) {
+        preloadResponsiveImage({
+          href: img.src,
+          srcset: img.getAttribute("srcset"),
+          sizes: img.getAttribute("sizes"),
+        });
+        img.dataset.preloaded = "true";
       }
     });
-  });
-  return Promise.all(imagePromises);
-}
-document.addEventListener("DOMContentLoaded", function () {
+  }
+  function waitForAllImages() {
+    const imgs = document.querySelectorAll("img");
+    const imagePromises = Array.from(imgs).map((img) => {
+      return new Promise((resolve) => {
+        if (img.complete) {
+          resolve();
+        } else {
+          img.addEventListener("load", resolve);
+          img.addEventListener("error", resolve); // Resolve even if there's an error
+        }
+      });
+    });
+    return Promise.all(imagePromises);
+  }
   let mannequinRoot;
 
   let initialCameraRadius,
@@ -4008,9 +4008,12 @@ document.addEventListener("DOMContentLoaded", function () {
     .addEventListener("click", resetCamera);
   preloadAllImages();
   waitForAllImages().then(() => {
-    setTimeout(() => {
-      console.log("All images have loaded and rendered.");
-      hideLoader();
-    }, 8000); // 100ms delay – adjust as needed
+    // Wait for two animation frames to allow the browser to paint the images.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        console.log("All images have loaded and rendered.");
+        hideLoader();
+      });
+    });
   });
 });
