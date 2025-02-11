@@ -63,6 +63,19 @@ document.addEventListener("DOMContentLoaded", function () {
   let initialRotationY = 0;
   let currentRotationY = 0;
   let currentOrientation = "front";
+
+  function getFabricPrice(filename) {
+    // Remove the file extension (assumes one dot before extension)
+    const baseName = filename.replace(/\.[^.]+$/, ""); // e.g. "A52024063- $850"
+    // Use a regex to capture a dash followed by optional whitespace and then a price
+    const match = baseName.match(/-\s*(\$[\d.]+)/);
+    if (match) {
+      return match[1]; // e.g. "$850"
+    }
+    // Fallback if no price is found
+    return "$0.00";
+  }
+
   function selectDefaultJacketParts() {
     const originalZoomToMesh = zoomToMesh;
     zoomToMesh = function (mesh) {
@@ -117,7 +130,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   const createScene = () => {
     scene = new BABYLON.Scene(engine);
-    scene.clearColor = new BABYLON.Color3(1, 1, 1);
+    scene.clearColor = new BABYLON.Color3(0.937, 0.937, 0.937);
     camera = new BABYLON.ArcRotateCamera(
       "camera",
       0,
@@ -169,10 +182,10 @@ document.addEventListener("DOMContentLoaded", function () {
         initialRotationY = parentNode.rotation.y;
         currentRotationY = initialRotationY;
         currentOrientation = "front";
-        applyTexture("./assets/fabric/business/E5101-38.webp");
+        applyTexture("./assets/fabric/All Fabrics/A52024006- $850.webp");
         centerModel();
         selectDefaultJacketParts();
-        initializeStep(step);
+        transitionToStep(step);
       }
     };
     function getPartNameFromMeshName(meshName) {
@@ -622,29 +635,6 @@ document.addEventListener("DOMContentLoaded", function () {
     switchPartMesh(partName, meshName);
   }
 
-  function rotateModel180() {
-    const fps = 60;
-    const durationSeconds = 1.0;
-    const totalFrames = fps * durationSeconds;
-    const currentRotation = parentNode.rotation.y;
-    const targetRotation = currentRotation + Math.PI;
-    const rotationAnim = new BABYLON.Animation(
-      "rotateModel180",
-      "rotation.y",
-      fps,
-      BABYLON.Animation.ANIMATIONTYPE_FLOAT,
-      BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
-    );
-    rotationAnim.setKeys([
-      { frame: 0, value: currentRotation },
-      { frame: totalFrames, value: targetRotation },
-    ]);
-    scene.beginAnimation(parentNode, 0, totalFrames, false);
-
-    parentNode.rotation.y = targetRotation;
-    console.log(`Model rotated 180° to Y=${targetRotation}`);
-  }
-
   function createMobileJacketPartCard(partName) {
     if (partName === "Back") {
       return `
@@ -1003,7 +993,7 @@ document.addEventListener("DOMContentLoaded", function () {
       backButton.addEventListener("click", () => {
         resetCamera();
         step = 2;
-        initializeStep(step);
+        transitionToStep(step);
         backButton.remove();
       });
 
@@ -1054,7 +1044,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const mobileLapelsSlider = document.createElement("div");
     mobileLapelsSlider.id = "mobileLapelsSlider";
-    mobileLapelsSlider.classList.add("slider-container");
+    mobileLapelsSlider.classList.add("cards-wrapper");
 
     const mobileLapelsSliderWrapper = document.createElement("div");
     mobileLapelsSliderWrapper.classList.add("cards-wrapper");
@@ -1152,7 +1142,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const mobileBackSlider = document.createElement("div");
     mobileBackSlider.id = "mobileBackSlider";
-    mobileBackSlider.classList.add("slider-container");
+    mobileBackSlider.classList.add("cards-wrapper");
 
     backViewOptions.forEach((item) => {
       const backCard = document.createElement("div");
@@ -1555,6 +1545,75 @@ document.addEventListener("DOMContentLoaded", function () {
       );
     }
   }
+
+  // Wrap the entire #sidePanel content in a new div for widescreen only.
+  function wrapSidePanelContent(step) {
+    // Only wrap on widescreen: if the viewport is mobile (<=1024.9px), do nothing.
+    if (window.matchMedia("(max-width: 1024.9px)").matches) return;
+
+    const sidePanel = document.getElementById("sidePanel");
+    if (!sidePanel) return;
+
+    // Remove any previous widescreen wrapper (assumed to have the class "widescreen-step")
+    const existingWrapper = sidePanel.querySelector(".widescreen-step");
+    if (existingWrapper) {
+      // Move its children back into sidePanel
+      while (existingWrapper.firstChild) {
+        sidePanel.insertBefore(existingWrapper.firstChild, existingWrapper);
+      }
+      existingWrapper.remove();
+    }
+
+    // Create a new wrapper with a class that indicates the step (e.g. "step-3-ws")
+    const wrapper = document.createElement("div");
+    wrapper.classList.add(`step-${step}-ws`, "widescreen-step");
+
+    // Move all current children of sidePanel into the new wrapper
+    while (sidePanel.firstChild) {
+      wrapper.appendChild(sidePanel.firstChild);
+    }
+    // Append the new wrapper back into sidePanel
+    sidePanel.appendChild(wrapper);
+  }
+  function transitionToStep(newStep) {
+    // Only run the animated transition on widescreen.
+    if (!window.matchMedia("(max-width: 1024.9px)").matches) {
+      const sidePanel = document.getElementById("sidePanel");
+      // Get the current widescreen wrapper.
+      const ws = sidePanel.querySelector(".widescreen-step");
+      if (ws) {
+        // Animate the wrapper sliding out to the right.
+        gsap.to(ws, {
+          x: window.innerWidth,
+          duration: 0.5,
+          ease: "power2.in",
+          onComplete: () => {
+            // After sliding out, update the content.
+            initializeStep(newStep);
+            // Now that the content has been updated, reselect the new wrapper.
+            const newWs = sidePanel.querySelector(".widescreen-step");
+            if (newWs) {
+              // Set the new wrapper to start off-screen.
+              gsap.set(newWs, { x: window.innerWidth });
+              // Animate the new wrapper sliding in.
+              gsap.to(newWs, {
+                x: 0,
+                duration: 0.8,
+                ease: "power2.out",
+              });
+            }
+          },
+        });
+      } else {
+        // If no widescreen wrapper is found, just update immediately.
+        initializeStep(newStep);
+      }
+    } else {
+      // On mobile, update the content immediately.
+      initializeStep(newStep);
+    }
+  }
+
   function initializeStep(currentStep) {
     updateStepClass(currentStep);
     const stepTitle = document.getElementById("stepTitle");
@@ -1577,16 +1636,9 @@ document.addEventListener("DOMContentLoaded", function () {
         <p>Please choose your preferred fabric group from the options below to proceed to the next step.</p>
       `;
         batchSelector.style.display = "none";
-
         loadJacketBasedOnUserChoices();
         initializeTextureButtons();
-
-        if (window.matchMedia("(max-width: 1024.9px)").matches) {
-          textureContainer.style.display = "flex";
-        } else {
-          textureContainer.style.display = "flex";
-        }
-
+        textureContainer.style.display = "flex";
         break;
 
       case 2:
@@ -1666,7 +1718,7 @@ document.addEventListener("DOMContentLoaded", function () {
               </button>
               <div class="sub_panel">
                 <!-- 8 images for Cut -->
-                <div id="pantsCutContainer" style="display: flex; flex-wrap: wrap; gap: 1rem;">
+                <div id="pantsCutContainer" style="display: flex; flex-wrap: wrap;">
                   <div class="pants-item">
                     <img loading="lazy" src="./assets/pants/cut/cut1.png" alt="Extra Slim">
                     <p>Extra Slim</p>
@@ -1714,7 +1766,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 Pleat <span class="sign-acc">+</span>
               </button>
               <div class="sub_panel">
-                 <div id="pantsCutContainer" style="display: flex; flex-wrap: wrap; gap: 1rem;">
+                 <div id="pantsCutContainer" style="display: flex; flex-wrap: wrap;">
                   <div class="pants-item">
                     <img loading="lazy" src="./assets/pants/pleat/pleat1.png" alt="pleat">
                     <p>pleat</p>
@@ -1843,7 +1895,7 @@ document.addEventListener("DOMContentLoaded", function () {
       case 4:
         if (window.matchMedia("(max-width: 1024.9px)").matches) {
           step = 5;
-          initializeStep(step);
+          transitionToStep(step);
           return;
         }
         if (
@@ -1851,7 +1903,7 @@ document.addEventListener("DOMContentLoaded", function () {
           userChoices.embroidery.jacket.length === 0
         ) {
           step = 5;
-          initializeStep(step);
+          transitionToStep(step);
           return;
         }
 
@@ -1877,7 +1929,9 @@ document.addEventListener("DOMContentLoaded", function () {
           customizationContainer.innerHTML += `
           <div class="embroidery-customization" data-index="${index}">
             <h3>Embroidery ${index + 1}: ${embroidery.location}</h3>
-            <button class="remove-embroidery-button" data-index="${index}">Remove</button>
+            <button class="remove-embroidery-button" data-index="${index}"><svg class="remove-emb"xmlns="http://www.w3.org/2000/svg" fill="#000000" width="800px" height="800px" viewBox="0 0 256 256" id="Flat">
+  <path d="M202.82861,197.17188a3.99991,3.99991,0,1,1-5.65722,5.65624L128,133.65723,58.82861,202.82812a3.99991,3.99991,0,0,1-5.65722-5.65624L122.343,128,53.17139,58.82812a3.99991,3.99991,0,0,1,5.65722-5.65624L128,122.34277l69.17139-69.17089a3.99991,3.99991,0,0,1,5.65722,5.65624L133.657,128Z"/>
+</svg></button>
             <div class="embroidery-color-and-text">
               <div class="jacket-embroidery-choice">
                 <img loading="lazy" class="embroidery-image" src="./assets/rectangle_115.webp" alt="${
@@ -1990,6 +2044,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         break;
     }
+    wrapSidePanelContent(currentStep);
   }
 
   function setupPantsMeasurementListeners() {
@@ -2254,14 +2309,32 @@ document.addEventListener("DOMContentLoaded", function () {
     textureContainer.appendChild(backButton);
 
     const categoryData = textures[categoryKey];
+    // If the category data is an array (like All Fabrics), use the normal function:
     if (Array.isArray(categoryData)) {
-      // For categories that are an array (like All Fabrics)
       const folderPath = `./assets/fabric/All Fabrics/`;
       showFabricItems(categoryKey, null, folderPath, categoryData);
     } else {
-      // For categories with sub‑categories (e.g. Color, Design, Event)
-      const cardsWrapper = document.createElement("div");
-      cardsWrapper.className = "cards-wrapper";
+      // For categories with sub‑categories (e.g. Colour, Design, Event)
+      let cardsWrapper;
+
+      // Only on mobile, if the category is Colour or Design, wrap in a slider container.
+      if (
+        window.matchMedia("(max-width: 1024.9px)").matches &&
+        (categoryKey === "Colour" || categoryKey === "Design")
+      ) {
+        const sliderContainer = document.createElement("div");
+        sliderContainer.classList.add("cards-wrapper");
+        cardsWrapper = document.createElement("div");
+        cardsWrapper.classList.add("cards-wrapper");
+        sliderContainer.appendChild(cardsWrapper);
+        textureContainer.appendChild(sliderContainer);
+      } else {
+        cardsWrapper = document.createElement("div");
+        cardsWrapper.className = "cards-wrapper";
+        textureContainer.appendChild(cardsWrapper);
+      }
+
+      // Loop through sub‑categories and create a card for each.
       Object.keys(categoryData).forEach((subCategoryKey, index) => {
         const fileNames = categoryData[subCategoryKey];
         const card = createSubCategoryCard(
@@ -2272,7 +2345,16 @@ document.addEventListener("DOMContentLoaded", function () {
         );
         cardsWrapper.appendChild(card);
       });
-      textureContainer.appendChild(cardsWrapper);
+
+      // If we are on mobile and in Colour or Design, initialize the slider.
+      if (
+        window.matchMedia("(max-width: 1024.9px)").matches &&
+        (categoryKey === "Colour" || categoryKey === "Design")
+      ) {
+        // Pass the slider container’s selector (or the cardsWrapper’s selector) to your slider initializer.
+        // (Assuming your initializeCardsSlider() already selects all ".cards-wrapper" elements.)
+        initializeCardsSlider();
+      }
     }
   }
 
@@ -2309,10 +2391,15 @@ document.addEventListener("DOMContentLoaded", function () {
     let folderPath = "";
     if (categoryKey === "All Fabrics") {
       folderPath = "./assets/fabric/All Fabrics/";
+    } else if (categoryKey === "Colour") {
+      folderPath = "./assets/fabric/Colour/Beige/";
+    } else if (categoryKey === "Design") {
+      folderPath = "./assets/fabric/Design/Birdseye/";
+    } else if (categoryKey === "Event") {
+      folderPath = "./assets/fabric/Event/Business/";
     } else {
-      // For Color, Design, and Event we use a default folder.
-      // (You may choose to adjust this or set up your own logic.)
-      folderPath = "./assets/fabric/business/";
+      // fallback if needed
+      folderPath = "./assets/fabric/All Fabrics/";
     }
     images.forEach((imgName) => {
       const img = document.createElement("img");
@@ -2386,62 +2473,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // function createCategoryCard(categoryId, categoryItems, index) {
-  //   const cardContainer = document.createElement("div");
-  //   cardContainer.className = "card_cardContainer";
-  //   cardContainer.dataset.testId = categoryId;
-  //   cardContainer.tabIndex = index + 1;
-
-  //   const imageContainer = document.createElement("div");
-  //   imageContainer.className = "card_cardImageContainer";
-
-  //   const imagesToShow = textures["1"].slice(0, 4);
-  //   imagesToShow.forEach((item) => {
-  //     const img = document.createElement("img");
-  //     img.className = "card_cardImage";
-  //     img.loading = "lazy";
-  //     img.src = `./assets/fabric/business/${item}.webp`;
-  //     img.alt = item;
-  //     imageContainer.appendChild(img);
-  //   });
-
-  //   const itemAmountContainer = document.createElement("div");
-  //   itemAmountContainer.className = "card_itemAmountContainer";
-  //   itemAmountContainer.dataset.testId = "item-amount";
-  //   itemAmountContainer.textContent = textures["1"].length;
-  //   imageContainer.appendChild(itemAmountContainer);
-
-  //   const cardDetails = document.createElement("div");
-  //   cardDetails.className = "card_cardDetails";
-
-  //   const cardText = document.createElement("p");
-  //   cardText.className = "card_cardText";
-  //   cardText.dataset.testId = "card-text";
-  //   cardText.textContent = `Category ${categoryId}`;
-
-  //   cardDetails.appendChild(cardText);
-
-  //   const arrowIcon = document.createElement("div");
-  //   arrowIcon.className = "card_arrowIcon";
-  //   arrowIcon.innerHTML = `<svg class="arrow-right" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000" height="800px" width="800px" version="1.1" id="Layer_1" viewBox="0 0 330 330" xml:space="preserve">
-  //   <path id="XMLID_222_" d="M250.606,154.389l-150-149.996c-5.857-5.858-15.355-5.858-21.213,0.001
-  //      c-5.857,5.858-5.857,15.355,0.001,21.213l139.393,139.39L79.393,304.394c-5.857,5.858-5.857,15.355,0.001,21.213
-  //      C82.322,328.536,86.161,330,90,330s7.678-1.464,10.607-4.394
-  //      l149.999-150.004c2.814-2.813,4.394-6.628,4.394-10.606
-  //      C255,161.018,253.42,157.202,250.606,154.389z"/>
-  // </svg>`;
-
-  //   cardContainer.appendChild(imageContainer);
-  //   cardContainer.appendChild(cardDetails);
-  //   cardContainer.appendChild(arrowIcon);
-
-  //   cardContainer.addEventListener("click", () => {
-  //     showCategoryItems(categoryId);
-  //   });
-
-  //   return cardContainer;
-  // }
-
   function createFabricCard(categoryKey, item, index, folderPath) {
     const cardContainer = document.createElement("div");
     cardContainer.className = "card_cardContainer card_small";
@@ -2458,6 +2489,7 @@ document.addEventListener("DOMContentLoaded", function () {
     img.alt = item;
     imageContainer.appendChild(img);
 
+    // Info button (if needed)
     const infoSpaceContainer = document.createElement("div");
     infoSpaceContainer.className = "card_infoSpaceContainer card_dark";
     infoSpaceContainer.dataset.testId = "info-btn";
@@ -2470,11 +2502,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const cardText = document.createElement("div");
     cardText.className = "card_cardText";
     cardText.dataset.testId = "card-text";
-    cardText.textContent = getFabricName(item);
+    cardText.textContent = getFabricName(item); // Assuming you want to format the name as well
+
+    // Here we extract the price from the filename:
     const cardSubText = document.createElement("div");
     cardSubText.className = "card_cardSubText";
     cardSubText.dataset.testId = "card-subtext";
-    cardSubText.textContent = "$0.00";
+    cardSubText.textContent = getFabricPrice(item);
+
     cardDetails.appendChild(cardText);
     cardDetails.appendChild(cardSubText);
 
@@ -2490,96 +2525,25 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function getFabricName(filename) {
-    return filename.replace(/_/g, " ").replace(".png", "");
+    // Remove the extension:
+    let baseName = filename.replace(/\.[^.]+$/, "");
+    // Remove the price part if it exists (everything from the dash onward)
+    return baseName.replace(/-\s*\$[\d.]+$/, "");
   }
 
   function selectFabric(categoryKey, item, cardElement, folderPath) {
-    // Remove the "selected" class from any previously selected images.
-    document.querySelectorAll(".card_cardImage.selected").forEach((img) => {
-      img.classList.remove("selected");
+    // Remove "selected" from any previously selected card containers.
+    document.querySelectorAll(".card_small.selected").forEach((card) => {
+      card.classList.remove("selected");
     });
 
-    const img = cardElement.querySelector(".card_cardImage");
-    if (img) {
-      img.classList.add("selected");
-    }
-
-    const textureUrl = folderPath + item;
-    applyTexture(textureUrl);
-    userChoices.texture = item; // Store the chosen fabric filename
-  }
-
-  function getFabricName(filename) {
-    return filename.replace(/_/g, " ").replace(".png", "");
-  }
-
-  function selectFabric(categoryKey, item, cardElement, folderPath) {
-    // Remove "selected" from any other fabric images.
-    document.querySelectorAll(".card_cardImage.selected").forEach((img) => {
-      img.classList.remove("selected");
-    });
-
-    const img = cardElement.querySelector(".card_cardImage");
-    if (img) {
-      img.classList.add("selected");
-    }
+    // Add the "selected" class to the entire card container.
+    cardElement.classList.add("selected");
 
     // Build the texture URL from the folder and file name.
     const textureUrl = folderPath + item;
     applyTexture(textureUrl);
     userChoices.texture = item; // Store the selected fabric file name
-  }
-
-  function showCategoryItems(categoryId) {
-    const textureContainer = document.getElementById("textureContainer");
-    textureContainer.innerHTML = "";
-
-    const confirmButton = document.createElement("button");
-    confirmButton.textContent = "Confirm";
-    confirmButton.classList.add("back-to-cat");
-    confirmButton.addEventListener("click", () => {
-      initializeTextureButtons();
-    });
-    textureContainer.appendChild(confirmButton);
-
-    const category1Items = textures["1"];
-
-    const cardsWrapper = document.createElement("div");
-    cardsWrapper.className = "cards-wrapper";
-
-    category1Items.forEach((item, index) => {
-      const fabricCard = createFabricCard(categoryId, item, index);
-      cardsWrapper.appendChild(fabricCard);
-    });
-
-    textureContainer.appendChild(cardsWrapper);
-
-    initializeCardsSlider();
-
-    if (userChoices.texture) {
-      const selectedItem = userChoices.texture.replace(".png", "");
-      const selectedImage = textureContainer.querySelector(
-        `img[alt="${selectedItem}"]`
-      );
-      if (selectedImage) {
-        selectedImage.classList.add("selected");
-      }
-    } else if (category1Items.length > 0) {
-      const firstFabricItem = category1Items[0];
-      const firstCategoryCard = textureContainer.querySelector(
-        ".card_cardContainer"
-      );
-
-      if (firstCategoryCard) {
-        const firstImage = firstCategoryCard.querySelector(".card_cardImage");
-        if (firstImage) {
-          firstImage.classList.add("selected");
-
-          const categoryId = Object.keys(textures)[0];
-          selectFabric(categoryId, firstFabricItem, firstCategoryCard);
-        }
-      }
-    }
   }
 
   function applyTexture(url) {
@@ -2679,7 +2643,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const mobileCutSlider = document.createElement("div");
     mobileCutSlider.id = "mobileCutSlider";
-    mobileCutSlider.classList.add("slider-container");
+    mobileCutSlider.classList.add("cards-wrapper");
 
     const cardsWrapper = document.createElement("div");
     cardsWrapper.classList.add("cards-wrapper");
@@ -3082,6 +3046,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (mode === "top") {
       const container = document.getElementById("mobilePocketsContainer");
+      container.classList.add("cards-wrapper");
       if (!container) return;
       container.innerHTML = "";
       filteredOptions.forEach((item) => {
@@ -3137,7 +3102,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!sliderContainer) {
         sliderContainer = document.createElement("div");
         sliderContainer.id = "mobilePocketsSlider";
-        sliderContainer.classList.add("slider-container");
+        sliderContainer.classList.add("cards-wrapper");
         const parent = document.getElementById("mobilePocketsContainer");
         if (parent) {
           parent.innerHTML = "";
@@ -3484,7 +3449,7 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         step--;
       }
-      initializeStep(step);
+      transitionToStep(step);
       enableCameraControls();
     }
   });
@@ -3520,7 +3485,7 @@ document.addEventListener("DOMContentLoaded", function () {
     } else if (step === 5) {
       if (validateMeasurements()) {
         step++;
-        initializeStep(step);
+        transitionToStep(step);
       } else {
         alert("Please fill in all measurements before proceeding.");
       }
@@ -3542,7 +3507,7 @@ document.addEventListener("DOMContentLoaded", function () {
         step++;
       }
 
-      initializeStep(step);
+      transitionToStep(step);
     } else if (step === 5) {
     } else {
       finalizeConfiguration();
@@ -3599,7 +3564,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const mobilePleatSlider = document.createElement("div");
     mobilePleatSlider.id = "mobilePleatSlider";
-    mobilePleatSlider.classList.add("slider-container");
+    mobilePleatSlider.classList.add("cards-wrapper");
 
     const cardsWrapper = document.createElement("div");
     cardsWrapper.classList.add("cards-wrapper");
