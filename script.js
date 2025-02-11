@@ -189,7 +189,10 @@ document.addEventListener("DOMContentLoaded", function () {
         },
       });
     }
-
+    setTimeout(() => {
+      console.log("All images have loaded and rendered.");
+      hideLoader();
+    }, 8000); // arbitrary delay
     const onModelLoaded = () => {
       modelsLoaded++;
 
@@ -3964,8 +3967,4 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("resetCameraButton")
     .addEventListener("click", resetCamera);
-  setTimeout(() => {
-    console.log("All images have loaded and rendered.");
-    hideLoader();
-  }, 8000); // arbitrary delay
 });
