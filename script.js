@@ -1,7 +1,35 @@
 import EmailSender from "./emailSender.js";
 import { loaderTimeline } from "./loader.js";
+function preloadResponsiveImage({ href, srcset, sizes }) {
+  const link = document.createElement("link");
+  link.rel = "preload";
+  link.as = "image";
+  link.href = href;
+  if (srcset) {
+    link.setAttribute("imagesrcset", srcset);
+  }
+  if (sizes) {
+    link.setAttribute("imagesizes", sizes);
+  }
+  document.head.appendChild(link);
+}
+
+function preloadAllImages() {
+  const imgs = document.querySelectorAll("img");
+  imgs.forEach((img) => {
+    // Remove lazy-loading so the browser loads immediately
+    img.removeAttribute("loading");
+    // Avoid duplicate preload hints
+    if (!img.dataset.preloaded) {
+      preloadResponsiveImage({ href: img.src });
+      img.dataset.preloaded = "true";
+    }
+  });
+}
 
 document.addEventListener("DOMContentLoaded", function () {
+  // ────────────────────────────────
+  // The rest of your variables and functions remain the same:
   let mannequinRoot;
 
   let initialCameraRadius,
@@ -66,14 +94,11 @@ document.addEventListener("DOMContentLoaded", function () {
   let currentOrientation = "front";
 
   function getFabricPrice(filename) {
-    // Remove the file extension (assumes one dot before extension)
-    const baseName = filename.replace(/\.[^.]+$/, ""); // e.g. "A52024063- $850"
-    // Use a regex to capture a dash followed by optional whitespace and then a price
+    const baseName = filename.replace(/\.[^.]+$/, "");
     const match = baseName.match(/-\s*(\$[\d.]+)/);
     if (match) {
-      return match[1]; // e.g. "$850"
+      return match[1];
     }
-    // Fallback if no price is found
     return "$0.00";
   }
 
@@ -93,7 +118,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (window.matchMedia("(max-width: 1024.9px)").matches) {
-      // For mobile, use the same keys as desktop for pockets.
       if (!userChoices.design.jacket["PocketsTop"]) {
         userChoices.design.jacket["PocketsTop"] = TOP_POCKETS[0];
         switchPartMesh("Pockets", TOP_POCKETS[0], "top");
@@ -129,6 +153,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function normalizeAngle(angle) {
     return angle % (2 * Math.PI);
   }
+
   const createScene = () => {
     scene = new BABYLON.Scene(engine);
     scene.clearColor = new BABYLON.Color3(0.937, 0.937, 0.937);
@@ -154,7 +179,6 @@ document.addEventListener("DOMContentLoaded", function () {
     scene.postProcesses.push(fxaa);
     if (camera.inputs.attached.touch) {
       camera.inputs.attached.touch.pinchPrecision = 30;
-
       camera.inputs.attached.touch.touchAngularSensibility = 10000;
     }
 
@@ -176,7 +200,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let modelsLoaded = 0;
     const modelsToLoad = 4;
     function hideLoader() {
-      // Option 1: Fade out then remove/hide the loader element
       gsap.to(".loader-tn", {
         opacity: 0,
         duration: 1,
@@ -192,19 +215,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const onModelLoaded = () => {
       modelsLoaded++;
-
       if (modelsLoaded === modelsToLoad) {
         parentNode.rotation.y = Math.PI / 2;
         initialRotationY = parentNode.rotation.y;
         currentRotationY = initialRotationY;
         currentOrientation = "front";
-        applyTexture("./assets/fabric/All Fabrics/A52024006- $850.webp");
+        applyTexture("./assets/fabric/All Fabrics/A52024006- $850.webp", {
+          href: "./assets/fabric/All Fabrics/A52024006- $850.webp",
+          srcset:
+            "./assets/fabric/All Fabrics/A52024006- $850_small.webp 500w, ./assets/fabric/All Fabrics/A52024006- $850_medium.webp 1000w, ./assets/fabric/All Fabrics/A52024006- $850_large.webp 1500w",
+          sizes: "100vw",
+        });
         centerModel();
         selectDefaultJacketParts();
         hideLoader();
         transitionToStep(step);
       }
     };
+
     function getPartNameFromMeshName(meshName) {
       if (meshName.startsWith("4on2_Back")) {
         return "Back";
@@ -216,6 +244,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return null;
       }
     }
+
     BABYLON.SceneLoader.ImportMesh("", "./", "jacket.glb", scene, (meshes) => {
       meshes.forEach((mesh) => {
         mesh.material = material;
@@ -223,15 +252,12 @@ document.addEventListener("DOMContentLoaded", function () {
         jacketMeshes.push(mesh);
         mesh.renderingGroupId = 2;
         partMeshes[mesh.name] = mesh;
-
         let partName = getPartNameFromMeshName(mesh.name);
         if (partName) {
           currentPartMeshes[partName] = mesh;
           partOptionsMeshes[partName][mesh.name] = mesh;
         }
-
         mesh.actionManager = new BABYLON.ActionManager(scene);
-
         mesh.actionManager.registerAction(
           new BABYLON.ExecuteCodeAction(
             BABYLON.ActionManager.OnPointerOverTrigger,
@@ -241,14 +267,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 const currentMesh = currentPartMeshes[partName];
                 highlightLayer.addMesh(currentMesh, BABYLON.Color3.White());
                 canvas.style.cursor = "pointer";
-
                 tooltip.style.display = "block";
                 tooltip.innerHTML = partName;
               }
             }
           )
         );
-
         mesh.actionManager.registerAction(
           new BABYLON.ExecuteCodeAction(
             BABYLON.ActionManager.OnPointerOutTrigger,
@@ -258,13 +282,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 const currentMesh = currentPartMeshes[partName];
                 highlightLayer.removeMesh(currentMesh);
                 canvas.style.cursor = "default";
-
                 tooltip.style.display = "none";
               }
             }
           )
         );
-
         mesh.actionManager.registerAction(
           new BABYLON.ExecuteCodeAction(
             BABYLON.ActionManager.OnPickDownTrigger,
@@ -462,7 +484,6 @@ document.addEventListener("DOMContentLoaded", function () {
     scene.onPointerDown = function (evt, pickResult) {
       if (!pickResult.hit) {
         highlightLayer.removeAllMeshes();
-
         document
           .querySelectorAll(".part-item")
           .forEach((item) => item.classList.remove("selected"));
@@ -491,14 +512,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
     });
-
     return scene;
   };
-
   scene = createScene();
   engine.runRenderLoop(() => scene && scene.render());
   window.addEventListener("resize", () => engine.resize());
-
   function setupPartHoverHighlight() {
     const partOptionButtons = document.querySelectorAll(".part-option");
     const partItems = document.querySelectorAll(".part-item");
@@ -2564,12 +2582,17 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   let texturesToLoad = 0;
   let texturesLoaded = 0;
-  function applyTexture(url) {
+  function applyTexture(url, preloadOptions) {
     if (!material) return;
     if (material.diffuseTexture && material.diffuseTexture.name === url) {
       return;
     }
-    texturesToLoad++; // Increase the total number of textures to load
+
+    // Preload the image if preloadOptions is provided.
+    // (You could also preload unconditionally if you always have a responsive version.)
+    if (preloadOptions) {
+      preloadResponsiveImage(preloadOptions);
+    }
 
     const texture = new BABYLON.Texture(
       url,
@@ -2579,18 +2602,9 @@ document.addEventListener("DOMContentLoaded", function () {
       BABYLON.Texture.TRILINEAR_SAMPLINGMODE,
       () => {
         console.log(`Texture loaded: ${url}`);
-        texturesLoaded++;
-        // If all expected textures are loaded, hide the loader.
-        if (texturesLoaded === texturesToLoad) {
-          hideLoader();
-        }
       },
       (message, exception) => {
         console.error(`Failed to load texture: ${url}`, message, exception);
-        texturesLoaded++; // Count errors as loaded so we don’t hang forever.
-        if (texturesLoaded === texturesToLoad) {
-          hideLoader();
-        }
       }
     );
     texture.uScale = 5.0;
@@ -3976,4 +3990,5 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("resetCameraButton")
     .addEventListener("click", resetCamera);
+  preloadAllImages();
 });

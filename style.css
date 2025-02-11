@@ -357,7 +357,7 @@ div .selected p {
 .selected {
   border-radius: 7px;
   border: 1px solid #1a1a1a;
-  background: #1a1a1a;
+  background: #363636;
 }
 
 .jacket-embroidery-choice.selected p {
@@ -777,7 +777,7 @@ div.card_cardImageContainer > .image-pants-cut:nth-child(4) {
   fill: white;
 }
 .remove-embroidery-button:hover {
-  background: #1a1a1a;
+  background: #363636;
 }
 .remove-embroidery-button {
   padding: 10px;
@@ -808,7 +808,7 @@ div.card_cardImageContainer > .image-pants-cut:nth-child(4) {
 .card_cardContainer.selected {
   border-radius: 7px;
   border: 1px solid #1a1a1a;
-  background: #1a1a1a;
+  background: #363636;
   color: white;
 }
 .card_cardContainer.selected p {
@@ -939,7 +939,7 @@ div.card_cardImageContainer > .image-pants-cut:nth-child(4) {
     cursor: pointer;
   }
   .mobile-colors:has(.selected) {
-    background: #1a1a1a;
+    background: #363636;
   }
   #sidePanel {
     width: 100vw;
@@ -1313,7 +1313,7 @@ div.card_cardImageContainer > .image-pants-cut:nth-child(4) {
   .embroidery-button:hover,
   .embroidery-button:focus,
   .embroidery-button:active {
-    background: #1a1a1a;
+    background: #363636;
   }
   .embroidery-button.active {
     background-color: #1a1a1a;
