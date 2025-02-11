@@ -1,4 +1,5 @@
 import EmailSender from "./emailSender.js";
+import { loaderTimeline } from "./loader.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   let mannequinRoot;

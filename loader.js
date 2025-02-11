@@ -1,3 +1,4 @@
+// loader.js
 console.clear();
 const tl = gsap.timeline({
   repeat: -1,
@@ -14,3 +15,6 @@ tl.to("#target2", { y: 10 }, "move");
 tl.to("#theSquare", { attr: { height: 22, y: 38 } }, "move");
 tl.to("line", { attr: { x1: 50, x2: 50 } });
 tl.to("text", { duration: 1, opacity: 0, ease: "none" });
+
+// Export the timeline for optional control later
+export const loaderTimeline = tl;
