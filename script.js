@@ -1,6 +1,6 @@
 import EmailSender from "./emailSender.js";
 import { loaderTimeline } from "./loader.js";
-
+let hideLoader; // Declare a variable in the global scope
 document.addEventListener("DOMContentLoaded", function () {
   function preloadResponsiveImage({ href, srcset, sizes }) {
     const link = document.createElement("link");
@@ -166,7 +166,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     zoomToMesh = originalZoomToMesh;
   }
-  function hideLoader() {
+  hideLoader = function () {
     gsap.to(".loader-tn", {
       opacity: 0,
       duration: 1,
@@ -178,7 +178,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       },
     });
-  }
+  };
   function normalizeAngle(angle) {
     return angle % (2 * Math.PI);
   }
