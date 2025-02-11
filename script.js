@@ -1,35 +1,37 @@
 import EmailSender from "./emailSender.js";
 import { loaderTimeline } from "./loader.js";
-function preloadResponsiveImage({ href, srcset, sizes }) {
-  const link = document.createElement("link");
-  link.rel = "preload";
-  link.as = "image";
-  link.href = href;
-  if (srcset) {
-    link.setAttribute("imagesrcset", srcset);
-  }
-  if (sizes) {
-    link.setAttribute("imagesizes", sizes);
-  }
-  document.head.appendChild(link);
-}
-
-function preloadAllImages() {
-  const imgs = document.querySelectorAll("img");
-  imgs.forEach((img) => {
-    // Remove lazy-loading so the browser loads immediately
-    img.removeAttribute("loading");
-    // Avoid duplicate preload hints
-    if (!img.dataset.preloaded) {
-      preloadResponsiveImage({ href: img.src });
-      img.dataset.preloaded = "true";
-    }
-  });
-}
 
 document.addEventListener("DOMContentLoaded", function () {
-  // ────────────────────────────────
-  // The rest of your variables and functions remain the same:
+  function preloadResponsiveImage({ href, srcset, sizes }) {
+    const link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "image";
+    link.href = href;
+    if (srcset) {
+      link.setAttribute("imagesrcset", srcset);
+    }
+    if (sizes) {
+      link.setAttribute("imagesizes", sizes);
+    }
+    document.head.appendChild(link);
+  }
+
+  function preloadAllImages() {
+    const imgs = document.querySelectorAll("img");
+    imgs.forEach((img) => {
+      // Remove lazy-loading so the browser loads immediately
+      img.removeAttribute("loading");
+      // Avoid duplicate preload hints by marking images that have been preloaded
+      if (!img.dataset.preloaded) {
+        preloadResponsiveImage({
+          href: img.src,
+          srcset: img.getAttribute("srcset"), // Pass srcset if available
+          sizes: img.getAttribute("sizes"), // Pass sizes if available
+        });
+        img.dataset.preloaded = "true";
+      }
+    });
+  }
   let mannequinRoot;
 
   let initialCameraRadius,
