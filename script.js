@@ -1667,7 +1667,7 @@ document.addEventListener("DOMContentLoaded", function () {
               </button>
               <div class="sub_panel">
                 <!-- 8 images for Cut -->
-                <div id="pantsCutContainer" style="display: flex; flex-wrap: wrap; gap: 1rem;">
+                <div id="pantsCutContainer" style="display: flex; flex-wrap: wrap;">
                   <div class="pants-item">
                     <img loading="lazy" src="./assets/pants/cut/cut1.png" alt="Extra Slim">
                     <p>Extra Slim</p>
@@ -1715,7 +1715,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 Pleat <span class="sign-acc">+</span>
               </button>
               <div class="sub_panel">
-                 <div id="pantsCutContainer" style="display: flex; flex-wrap: wrap; gap: 1rem;">
+                 <div id="pantsCutContainer" style="display: flex; flex-wrap: wrap;">
                   <div class="pants-item">
                     <img loading="lazy" src="./assets/pants/pleat/pleat1.png" alt="pleat">
                     <p>pleat</p>

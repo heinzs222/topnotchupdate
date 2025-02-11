@@ -5,6 +5,9 @@
   font-style: normal;
   font-display: swap;
 }
+a {
+  transition: all 0.3s ease;
+}
 *,
 ::before,
 ::after {
@@ -145,6 +148,7 @@ main {
   flex-wrap: wrap;
   align-items: center;
   gap: 15px;
+  padding: 20px 0 0 0;
 }
 #resetCameraButton,
 #backButton,
@@ -248,7 +252,7 @@ main {
 
 /* Styles for pants item images */
 .pants-item img {
-  width: 60%;
+  width: 90%;
   height: 115px;
   display: block;
   cursor: pointer;
@@ -824,6 +828,17 @@ div.card_cardImageContainer > .image-pants-cut:nth-child(4) {
 @media screen and (min-width: 1025px) {
   #textureContainer {
     align-items: start;
+    justify-content: start;
+  }
+  .card_cardImageContainer {
+    width: 50%;
+    max-width: 150px;
+  }
+  .cards-wrapper {
+    padding: 20px 0;
+  }
+  .step-1-ws .cards-wrapper {
+    width: 100%;
   }
 }
 @media screen and (max-width: 1024.9px) {
@@ -1025,6 +1040,10 @@ div.card_cardImageContainer > .image-pants-cut:nth-child(4) {
   #sidePanel:has(.part-option) .text-container,
   #sidePanel:has(#mobileCutSlider) .text-container {
     display: none;
+  }
+  #mobilePleatSlider .cards-wrapper,
+  #mobileCutSlider .cards-wrapper {
+    align-items: center;
   }
   #textureContainer:has(.text-step3) {
     flex-direction: column;
