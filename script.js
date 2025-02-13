@@ -192,7 +192,7 @@ document.addEventListener("DOMContentLoaded", function () {
     setTimeout(() => {
       console.log("All images have loaded and rendered.");
       hideLoader();
-    }, 8000); // arbitrary delay
+    }, 4000); // arbitrary delay
     const onModelLoaded = () => {
       modelsLoaded++;
 
@@ -1568,9 +1568,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Wrap the entire #sidePanel content in a new div for widescreen only.
   function wrapSidePanelContent(step) {
-    // Only wrap on widescreen: if the viewport is mobile (<=1024.9px), do nothing.
-    if (window.matchMedia("(max-width: 1024.9px)").matches) return;
-
     const sidePanel = document.getElementById("sidePanel");
     if (!sidePanel) return;
 
@@ -1595,28 +1592,53 @@ document.addEventListener("DOMContentLoaded", function () {
     // Append the new wrapper back into sidePanel
     sidePanel.appendChild(wrapper);
   }
+
   function transitionToStep(newStep) {
-    // Only run the animated transition on widescreen.
-    if (!window.matchMedia("(max-width: 1024.9px)").matches) {
-      const sidePanel = document.getElementById("sidePanel");
-      // Get the current widescreen wrapper.
-      const ws = sidePanel.querySelector(".widescreen-step");
-      if (ws) {
-        // Animate the wrapper sliding out to the right.
-        gsap.to(ws, {
+    const sidePanel = document.getElementById("sidePanel");
+
+    if (window.matchMedia("(max-width: 1024.9px)").matches) {
+      // Mobile: Animate vertically (slide down then up)
+      const currentWrapper = sidePanel.querySelector(".widescreen-step");
+      if (currentWrapper) {
+        gsap.to(currentWrapper, {
+          y: window.innerHeight, // slide down off-screen
+          duration: 0.5,
+          ease: "power2.in",
+          onComplete: () => {
+            // Update the content
+            initializeStep(newStep);
+            // After updating, grab the new wrapper
+            const newWrapper = sidePanel.querySelector(".widescreen-step");
+            if (newWrapper) {
+              // Set the new wrapper to start above the viewport
+              gsap.set(newWrapper, { y: -window.innerHeight });
+              // Animate the new wrapper sliding into place (vertically)
+              gsap.to(newWrapper, {
+                y: 0,
+                duration: 0.8,
+                ease: "power2.out",
+              });
+            }
+          },
+        });
+      } else {
+        // Fallback if no wrapper is present
+        initializeStep(newStep);
+      }
+    } else {
+      // Widescreen (desktop): Use the original horizontal transition
+      const currentWrapper = sidePanel.querySelector(".widescreen-step");
+      if (currentWrapper) {
+        gsap.to(currentWrapper, {
           x: window.innerWidth,
           duration: 0.5,
           ease: "power2.in",
           onComplete: () => {
-            // After sliding out, update the content.
             initializeStep(newStep);
-            // Now that the content has been updated, reselect the new wrapper.
-            const newWs = sidePanel.querySelector(".widescreen-step");
-            if (newWs) {
-              // Set the new wrapper to start off-screen.
-              gsap.set(newWs, { x: window.innerWidth });
-              // Animate the new wrapper sliding in.
-              gsap.to(newWs, {
+            const newWrapper = sidePanel.querySelector(".widescreen-step");
+            if (newWrapper) {
+              gsap.set(newWrapper, { x: window.innerWidth });
+              gsap.to(newWrapper, {
                 x: 0,
                 duration: 0.8,
                 ease: "power2.out",
@@ -1625,12 +1647,8 @@ document.addEventListener("DOMContentLoaded", function () {
           },
         });
       } else {
-        // If no widescreen wrapper is found, just update immediately.
         initializeStep(newStep);
       }
-    } else {
-      // On mobile, update the content immediately.
-      initializeStep(newStep);
     }
   }
 
