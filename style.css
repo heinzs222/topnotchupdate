@@ -961,7 +961,7 @@ div.card_cardImageContainer > .image-pants-cut:nth-child(4) {
     justify-content: space-around;
   }
   .step-1 .cards-wrapper {
-    justify-content: start;
+    justify-content: center;
   }
 
   .cards-wrapper {
@@ -1027,6 +1027,9 @@ div.card_cardImageContainer > .image-pants-cut:nth-child(4) {
     justify-content: center;
     padding: 30px;
   }
+  .widescreen-step {
+    width: 100%;
+  }
   .cards-wrapper .card_cardContainer.part-option {
     max-width: 150px;
     /* padding: 5px;
@@ -1076,6 +1079,7 @@ div.card_cardImageContainer > .image-pants-cut:nth-child(4) {
     padding: 0 20px;
     width: 100%;
     position: relative;
+    align-items: center;
   }
   .top-bottom-pockets-wrapper {
     position: absolute;
@@ -1490,7 +1494,7 @@ div.card_cardImageContainer > .image-pants-cut:nth-child(4) {
   }
   #sidePanel {
     /* gap: 15px; */
-    padding: 10px 0;
+    padding: 30px 0 10px 0;
   }
   .jacket-embroidery-choice p {
     font-size: 10px;
