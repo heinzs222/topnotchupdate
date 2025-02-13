@@ -192,7 +192,7 @@ document.addEventListener("DOMContentLoaded", function () {
     setTimeout(() => {
       console.log("All images have loaded and rendered.");
       hideLoader();
-    }, 4000); // arbitrary delay
+    }, 1000); // arbitrary delay
     const onModelLoaded = () => {
       modelsLoaded++;
 
