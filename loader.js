@@ -1,5 +1,4 @@
 // loader.js
-console.clear();
 const tl = gsap.timeline({
   repeat: -1,
   repeatDelay: 0.5,
