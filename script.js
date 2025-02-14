@@ -4,6 +4,7 @@ import { addToCartByProductName } from "./shopifyaddtocart.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("cart update new");
+  console.log("I hope");
   let mannequinRoot;
 
   let initialCameraRadius,
