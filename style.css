@@ -1432,15 +1432,18 @@ div.card_cardImageContainer > .image-pants-cut:nth-child(4) {
     position: absolute;
     z-index: 2;
     left: calc(50% - 65px);
-    top: 75%;
+    top: 83%;
     padding: 8px 35px;
     font-size: 16px;
+  }
+  .card_cardSubText {
+    text-align: center;
   }
   .card_cardDetails {
     width: 100%;
   }
   .card_small .card_cardDetails {
-    display: none;
+    display: block;
   }
   .text-step3 {
     display: none;

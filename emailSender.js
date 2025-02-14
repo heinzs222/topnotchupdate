@@ -4,12 +4,15 @@ const EmailSender = {
     // Prepare the parameters for the email template.
     const templateParams = {
       texture: userChoices.texture,
-      "design.jacket.Back": userChoices.design.jacket.Back || "",
-      "design.jacket.Lapels": userChoices.design.jacket.Lapels || "",
-      "design.jacket.Pockets": userChoices.design.jacket.Pockets || "",
-      // Pass embroidery as an object with a "jacket" key containing the array.
+      design: {
+        jacket: {
+          Back: userChoices.design.jacket.Back || "",
+          Lapels: userChoices.design.jacket.Lapels || "",
+          PocketsTop: userChoices.design.jacket.PocketsTop || "",
+          PocketsBottom: userChoices.design.jacket.PocketsBottom || "",
+        },
+      },
       embroidery: { jacket: userChoices.embroidery.jacket },
-      // Build measurements as a string if userChoices.measurements is an object.
       measurements:
         typeof userChoices.measurements === "object"
           ? Object.entries(userChoices.measurements)
