@@ -2,7 +2,7 @@ import EmailSender from "./emailSender.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("cart update new");
-  console.log("I hope");
+  console.log("I hope plz");
   let mannequinRoot;
 
   let initialCameraRadius,
