@@ -3842,6 +3842,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     alert(summary);
     EmailSender.sendUserChoicesEmail(userChoices);
+    const productName = userChoices.texture; // or: getFabricName(userChoices.texture)
+
     addToCartByProductName(productName, userChoices);
   }
 
