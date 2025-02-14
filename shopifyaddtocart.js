@@ -1,29 +1,29 @@
-// shopifyaddtocart.js
-
-/**
- * Given a product name and userChoices, this function attempts to convert the product name
- * into a Shopify product handle, fetches the product data, and then adds the first variant
- * to the cart with the custom properties.
- *
- * Note: This assumes your product names map directly to your product handles (all lowercase,
- * spaces replaced with dashes, etc.). If not, you’ll need to adjust the logic.
- */
 export async function addToCartByProductName(productName, userChoices) {
   try {
-    // Convert the product name to a handle (adjust as needed)
+    // Convert productName to a handle – this should match the handle in your products array.
     const handle = productName.toLowerCase().trim().replace(/\s+/g, "-");
 
-    // Fetch the product JSON from Shopify
-    const productResponse = await fetch(`/products/${handle}.js`);
-    if (!productResponse.ok) {
-      throw new Error(`Product not found for handle: ${handle}`);
+    // Attempt to look up the product in the existing array (beigeProducts)
+    let productData;
+    if (typeof beigeProducts !== "undefined" && Array.isArray(beigeProducts)) {
+      productData = beigeProducts.find((product) => product.handle === handle);
     }
-    const productData = await productResponse.json();
 
-    // For simplicity, choose the first variant (you may choose differently if needed)
-    const variantId = productData.variants[0].id;
+    // If not found in the array, fall back to fetching from Shopify
+    if (!productData) {
+      const productResponse = await fetch(`/products/${handle}.js`);
+      if (!productResponse.ok) {
+        throw new Error(`Product not found for handle: ${handle}`);
+      }
+      productData = await productResponse.json();
+    }
 
-    // Create custom properties from userChoices.
+    // Use the first variant's ID.
+    // Note: In your Liquid data the variant ID might be stored as 'variant_id' (or 'id').
+    const variantId =
+      productData.variants[0].variant_id || productData.variants[0].id;
+
+    // Create custom properties from userChoices
     const properties = {
       Texture: userChoices.texture,
       "Jacket Design": JSON.stringify(userChoices.design.jacket),
