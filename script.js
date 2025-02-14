@@ -2047,6 +2047,10 @@ document.addEventListener("DOMContentLoaded", function () {
         break;
 
       case 5:
+        document.querySelector(
+          "body > main > div > div.canvas-container"
+        ).style.display = "none";
+
         stepTitle.innerHTML = `
         <p>Please provide your measurements for the pants.</p>
         <p>Enter your measurements in the fields provided. If you need assistance, refer to the diagram.</p>
@@ -3466,6 +3470,9 @@ document.addEventListener("DOMContentLoaded", function () {
       transitionToStep(step);
       enableCameraControls();
     }
+    document.querySelector(
+      "body > main > div > div.canvas-container"
+    ).style.display = "block";
   });
 
   document.getElementById("nextButton").addEventListener("click", function () {

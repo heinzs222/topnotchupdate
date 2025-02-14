@@ -1439,6 +1439,9 @@ div.card_cardImageContainer > .image-pants-cut:nth-child(4) {
   .card_cardSubText {
     text-align: center;
   }
+  #sidePanel:has(.step-5) {
+    height: 100vh;
+  }
   .card_cardDetails {
     width: 100%;
   }
@@ -1483,6 +1486,9 @@ div.card_cardImageContainer > .image-pants-cut:nth-child(4) {
     justify-content: center;
     width: 75%;
     margin: 0 auto;
+  }
+  .step-5-ws.widescreen-step {
+    justify-content: center;
   }
   .color-options.hidden {
     display: none;
