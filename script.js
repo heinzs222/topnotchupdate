@@ -1,5 +1,6 @@
 import EmailSender from "./emailSender.js";
-import { loaderTimeline } from "./loader.js";
+
+import { addToCartByProductName } from "./shopifyaddtocart.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   let mannequinRoot;
@@ -2047,6 +2048,7 @@ document.addEventListener("DOMContentLoaded", function () {
         break;
 
       case 5:
+        // Hide the canvas on step 5
         document.querySelector(
           "body > main > div > div.canvas-container"
         ).style.display = "none";
@@ -2063,7 +2065,6 @@ document.addEventListener("DOMContentLoaded", function () {
         textureContainer.innerHTML = `
         <div id="pantsMeasurementWrapper">
           <img loading="lazy" id="pantsMeasurementImage" src="assets/pants/pants.png" alt="Pants Diagram">
-          <!-- Measurement inputs will be positioned over this image -->
           ${generatePantsMeasurementInputs()}
         </div>
       `;
@@ -2076,13 +2077,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         setupPantsMeasurementListeners();
 
+        // Change the Next button text to "Finish"
+        document.getElementById("nextButton").textContent = "Finish";
         break;
 
       default:
         canvas.style.display = "block";
-
         console.log("Invalid step");
-
         break;
     }
     wrapSidePanelContent(currentStep);
@@ -3836,6 +3837,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     alert(summary);
     EmailSender.sendUserChoicesEmail(userChoices);
+    addToCartByProductName("Suit Customization", userChoices);
   }
 
   document
