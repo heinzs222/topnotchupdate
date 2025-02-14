@@ -3842,7 +3842,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     alert(summary);
     EmailSender.sendUserChoicesEmail(userChoices);
-    addToCartByProductName("Suit Customization", userChoices);
+    addToCartByProductName(productName, userChoices);
   }
 
   document
