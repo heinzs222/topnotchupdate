@@ -2554,6 +2554,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function selectFabric(categoryKey, item, cardElement, folderPath) {
+    console.log("Texture clicked:", item);
     document.querySelectorAll(".card_small.selected").forEach((card) => {
       card.classList.remove("selected");
     });
@@ -2563,6 +2564,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const textureUrl = folderPath + item;
     applyTexture(textureUrl);
     userChoices.texture = item;
+    console.log("userChoices.texture updated to:", userChoices.texture);
   }
 
   function applyTexture(url) {
@@ -3475,6 +3477,10 @@ document.addEventListener("DOMContentLoaded", function () {
       "body > main > div > div.canvas-container"
     ).style.display = "block";
   });
+  function getFabricName(filename) {
+    let baseName = filename.replace(/\.[^.]+$/, ""); // remove extension
+    return baseName.replace(/-\s*\$[\d.]+$/, ""); // remove " - $price"
+  }
 
   document.getElementById("nextButton").addEventListener("click", function () {
     enableCameraControls();
@@ -3482,12 +3488,11 @@ document.addEventListener("DOMContentLoaded", function () {
     let selectedChoice = null;
 
     if (step === 1) {
-      const selectedTexture = document.querySelector(
-        ".card_cardImage.selected"
-      );
-      if (selectedTexture) {
-        selectedChoice = { texture: selectedTexture.alt };
-        userChoices.texture = selectedTexture.alt;
+      if (userChoices.texture) {
+        // Use getFabricName to remove the price and file extension.
+        const cleanedName = getFabricName(userChoices.texture);
+        selectedChoice = { texture: cleanedName };
+        userChoices.texture = cleanedName;
       } else {
         selectedChoice = { texture: "E5102-38.webp" };
         userChoices.texture = "E5102-38.webp";
