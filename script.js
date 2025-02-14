@@ -1,7 +1,5 @@
 import EmailSender from "./emailSender.js";
 
-import { addToCartByProductName } from "./shopifyaddtocart.js";
-
 document.addEventListener("DOMContentLoaded", function () {
   console.log("cart update new");
   console.log("I hope");
@@ -3844,9 +3842,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     alert(summary);
     EmailSender.sendUserChoicesEmail(userChoices);
-    const productName = userChoices.texture; // or: getFabricName(userChoices.texture)
-
-    addToCartByProductName(productName, userChoices);
+    window.parent.postMessage(
+      { type: "userChoices", data: userChoices },
+      "*" // For security, you can restrict this to your parent domain
+    );
   }
 
   document
