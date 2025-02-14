@@ -3,7 +3,7 @@ import EmailSender from "./emailSender.js";
 import { addToCartByProductName } from "./shopifyaddtocart.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("cart");
+  console.log("cart update new");
   let mannequinRoot;
 
   let initialCameraRadius,
