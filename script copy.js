@@ -1,7 +1,8 @@
 import EmailSender from "./emailSender.js";
-import { loaderTimeline } from "./loader.js";
 
 document.addEventListener("DOMContentLoaded", function () {
+  console.log("cart update new");
+  console.log("I hope plz");
   let mannequinRoot;
 
   let initialCameraRadius,
@@ -66,14 +67,13 @@ document.addEventListener("DOMContentLoaded", function () {
   let currentOrientation = "front";
 
   function getFabricPrice(filename) {
-    // Remove the file extension (assumes one dot before extension)
-    const baseName = filename.replace(/\.[^.]+$/, ""); // e.g. "A52024063- $850"
-    // Use a regex to capture a dash followed by optional whitespace and then a price
+    const baseName = filename.replace(/\.[^.]+$/, "");
+
     const match = baseName.match(/-\s*(\$[\d.]+)/);
     if (match) {
-      return match[1]; // e.g. "$850"
+      return match[1];
     }
-    // Fallback if no price is found
+
     return "$0.00";
   }
 
@@ -93,7 +93,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (window.matchMedia("(max-width: 1024.9px)").matches) {
-      // For mobile, use the same keys as desktop for pockets.
       if (!userChoices.design.jacket["PocketsTop"]) {
         userChoices.design.jacket["PocketsTop"] = TOP_POCKETS[0];
         switchPartMesh("Pockets", TOP_POCKETS[0], "top");
@@ -176,7 +175,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let modelsLoaded = 0;
     const modelsToLoad = 4;
     function hideLoader() {
-      // Option 1: Fade out then remove/hide the loader element
       gsap.to(".loader-tn", {
         opacity: 0,
         duration: 1,
@@ -184,12 +182,15 @@ document.addEventListener("DOMContentLoaded", function () {
         onComplete: function () {
           const loader = document.getElementById("loader-top-notch");
           if (loader) {
-            loader.style.display = "none";
+            loader.style.zIndex = "-1";
           }
         },
       });
     }
-
+    setTimeout(() => {
+      console.log("All images have loaded and rendered.");
+      hideLoader();
+    }, 1000);
     const onModelLoaded = () => {
       modelsLoaded++;
 
@@ -201,7 +202,7 @@ document.addEventListener("DOMContentLoaded", function () {
         applyTexture("./assets/fabric/All Fabrics/A52024006- $850.webp");
         centerModel();
         selectDefaultJacketParts();
-        hideLoader();
+
         transitionToStep(step);
       }
     };
@@ -873,11 +874,8 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Compute how much the parent node (model) has rotated relative to its initial rotation.
     let deltaRotation = parentNode.rotation.y - initialRotationY;
-    // The desired back view alpha is normally (initialCameraAlpha + Math.PI),
-    // but we subtract the delta so that if the model is rotated by deltaRotation,
-    // the camera still looks at the back of the model.
+
     let desiredAlpha = initialCameraAlpha + Math.PI - deltaRotation;
     desiredAlpha = desiredAlpha % (2 * Math.PI);
 
@@ -939,9 +937,8 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Compute how much the model (parentNode) has rotated relative to its initial rotation.
     let deltaRotation = parentNode.rotation.y - initialRotationY;
-    // To maintain the same relative front view, subtract that delta from the initial camera alpha.
+
     let desiredAlpha = (initialCameraAlpha - deltaRotation) % (2 * Math.PI);
 
     BABYLON.Animation.CreateAndStartAnimation(
@@ -1563,57 +1560,85 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Wrap the entire #sidePanel content in a new div for widescreen only.
   function wrapSidePanelContent(step) {
-    // Only wrap on widescreen: if the viewport is mobile (<=1024.9px), do nothing.
-    if (window.matchMedia("(max-width: 1024.9px)").matches) return;
-
     const sidePanel = document.getElementById("sidePanel");
     if (!sidePanel) return;
 
-    // Remove any previous widescreen wrapper (assumed to have the class "widescreen-step")
+    // Remove any previous wrapper with class "widescreen-step"
     const existingWrapper = sidePanel.querySelector(".widescreen-step");
     if (existingWrapper) {
-      // Move its children back into sidePanel
       while (existingWrapper.firstChild) {
         sidePanel.insertBefore(existingWrapper.firstChild, existingWrapper);
       }
       existingWrapper.remove();
     }
 
-    // Create a new wrapper with a class that indicates the step (e.g. "step-3-ws")
-    const wrapper = document.createElement("div");
-    wrapper.classList.add(`step-${step}-ws`, "widescreen-step");
+    if (window.matchMedia("(max-width: 1024.9px)").matches) {
+      // On mobile, wrap only the content except the next/back buttons
+      const wrapper = document.createElement("div");
+      wrapper.classList.add(`step-${step}-ws`, "widescreen-step");
 
-    // Move all current children of sidePanel into the new wrapper
-    while (sidePanel.firstChild) {
-      wrapper.appendChild(sidePanel.firstChild);
+      // Select all children that are not the next/back buttons container.
+      // (Assumes that container has a class "next-back-btns")
+      Array.from(sidePanel.children).forEach((child) => {
+        if (!child.classList.contains("next-back-btns")) {
+          wrapper.appendChild(child);
+        }
+      });
+      // Insert the wrapper at the beginning so that the next/back buttons remain separate.
+      sidePanel.insertBefore(wrapper, sidePanel.firstChild);
+    } else {
+      // On desktop, wrap everything
+      const wrapper = document.createElement("div");
+      wrapper.classList.add(`step-${step}-ws`, "widescreen-step");
+      while (sidePanel.firstChild) {
+        wrapper.appendChild(sidePanel.firstChild);
+      }
+      sidePanel.appendChild(wrapper);
     }
-    // Append the new wrapper back into sidePanel
-    sidePanel.appendChild(wrapper);
   }
+
   function transitionToStep(newStep) {
-    // Only run the animated transition on widescreen.
-    if (!window.matchMedia("(max-width: 1024.9px)").matches) {
-      const sidePanel = document.getElementById("sidePanel");
-      // Get the current widescreen wrapper.
-      const ws = sidePanel.querySelector(".widescreen-step");
-      if (ws) {
-        // Animate the wrapper sliding out to the right.
-        gsap.to(ws, {
+    const sidePanel = document.getElementById("sidePanel");
+
+    if (window.matchMedia("(max-width: 1024.9px)").matches) {
+      const currentWrapper = sidePanel.querySelector(".widescreen-step");
+      if (currentWrapper) {
+        gsap.to(currentWrapper, {
+          y: window.innerHeight,
+          duration: 0.5,
+          ease: "power2.in",
+          onComplete: () => {
+            initializeStep(newStep);
+
+            const newWrapper = sidePanel.querySelector(".widescreen-step");
+            if (newWrapper) {
+              gsap.set(newWrapper, { y: -window.innerHeight });
+
+              gsap.to(newWrapper, {
+                y: 0,
+                duration: 0.8,
+                ease: "power2.out",
+              });
+            }
+          },
+        });
+      } else {
+        initializeStep(newStep);
+      }
+    } else {
+      const currentWrapper = sidePanel.querySelector(".widescreen-step");
+      if (currentWrapper) {
+        gsap.to(currentWrapper, {
           x: window.innerWidth,
           duration: 0.5,
           ease: "power2.in",
           onComplete: () => {
-            // After sliding out, update the content.
             initializeStep(newStep);
-            // Now that the content has been updated, reselect the new wrapper.
-            const newWs = sidePanel.querySelector(".widescreen-step");
-            if (newWs) {
-              // Set the new wrapper to start off-screen.
-              gsap.set(newWs, { x: window.innerWidth });
-              // Animate the new wrapper sliding in.
-              gsap.to(newWs, {
+            const newWrapper = sidePanel.querySelector(".widescreen-step");
+            if (newWrapper) {
+              gsap.set(newWrapper, { x: window.innerWidth });
+              gsap.to(newWrapper, {
                 x: 0,
                 duration: 0.8,
                 ease: "power2.out",
@@ -1622,12 +1647,8 @@ document.addEventListener("DOMContentLoaded", function () {
           },
         });
       } else {
-        // If no widescreen wrapper is found, just update immediately.
         initializeStep(newStep);
       }
-    } else {
-      // On mobile, update the content immediately.
-      initializeStep(newStep);
     }
   }
 
@@ -2027,6 +2048,11 @@ document.addEventListener("DOMContentLoaded", function () {
         break;
 
       case 5:
+        // Hide the canvas on step 5
+        document.querySelector(
+          "body > main > div > div.canvas-container"
+        ).style.display = "none";
+
         stepTitle.innerHTML = `
         <p>Please provide your measurements for the pants.</p>
         <p>Enter your measurements in the fields provided. If you need assistance, refer to the diagram.</p>
@@ -2039,7 +2065,6 @@ document.addEventListener("DOMContentLoaded", function () {
         textureContainer.innerHTML = `
         <div id="pantsMeasurementWrapper">
           <img loading="lazy" id="pantsMeasurementImage" src="assets/pants/pants.png" alt="Pants Diagram">
-          <!-- Measurement inputs will be positioned over this image -->
           ${generatePantsMeasurementInputs()}
         </div>
       `;
@@ -2052,13 +2077,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
         setupPantsMeasurementListeners();
 
+        // Change the Next button text to "Finish"
+        document.getElementById("nextButton").textContent = "Finish";
         break;
 
       default:
         canvas.style.display = "block";
-
         console.log("Invalid step");
-
         break;
     }
     wrapSidePanelContent(currentStep);
@@ -2211,9 +2236,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   function showFabricItems(categoryKey, subCategoryKey, folderPath, fileNames) {
     const textureContainer = document.getElementById("textureContainer");
-    textureContainer.innerHTML = ""; // Clear container
+    textureContainer.innerHTML = "";
 
-    // Add a Back button: if a sub‑category was selected, go back to sub‑categories; otherwise, top‑level.
     const backButton = document.createElement("button");
     backButton.textContent = "Back";
     backButton.classList.add("back-to-cat");
@@ -2258,7 +2282,6 @@ document.addEventListener("DOMContentLoaded", function () {
     imageContainer.className = "card_cardImageContainer";
     imageContainer.style.touchAction = "pan-y;";
 
-    // Show first 4 images
     const imagesToShow = fileNames.slice(0, 4);
     imagesToShow.forEach((item) => {
       const img = document.createElement("img");
@@ -2303,7 +2326,6 @@ document.addEventListener("DOMContentLoaded", function () {
   </svg>`;
     cardContainer.appendChild(arrowIcon);
 
-    // On click, show the fabric items for this sub‑category.
     cardContainer.addEventListener("click", () => {
       const folderPath = `./assets/fabric/${categoryKey}/${subCategoryKey}/`;
       showFabricItems(categoryKey, subCategoryKey, folderPath, fileNames);
@@ -2314,9 +2336,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function showSubCategories(categoryKey) {
     const textureContainer = document.getElementById("textureContainer");
-    textureContainer.innerHTML = ""; // Clear the container
+    textureContainer.innerHTML = "";
 
-    // Add a Back button to return to the top‑level view.
     const backButton = document.createElement("button");
     backButton.textContent = "Back";
     backButton.classList.add("back-to-cat");
@@ -2326,15 +2347,13 @@ document.addEventListener("DOMContentLoaded", function () {
     textureContainer.appendChild(backButton);
 
     const categoryData = textures[categoryKey];
-    // If the category data is an array (like All Fabrics), use the normal function:
+
     if (Array.isArray(categoryData)) {
       const folderPath = `./assets/fabric/All Fabrics/`;
       showFabricItems(categoryKey, null, folderPath, categoryData);
     } else {
-      // For categories with sub‑categories (e.g. Colour, Design, Event)
       let cardsWrapper;
 
-      // Only on mobile, if the category is Colour or Design, wrap in a slider container.
       if (
         window.matchMedia("(max-width: 1024.9px)").matches &&
         (categoryKey === "Colour" || categoryKey === "Design")
@@ -2351,7 +2370,6 @@ document.addEventListener("DOMContentLoaded", function () {
         textureContainer.appendChild(cardsWrapper);
       }
 
-      // Loop through sub‑categories and create a card for each.
       Object.keys(categoryData).forEach((subCategoryKey, index) => {
         const fileNames = categoryData[subCategoryKey];
         const card = createSubCategoryCard(
@@ -2363,13 +2381,10 @@ document.addEventListener("DOMContentLoaded", function () {
         cardsWrapper.appendChild(card);
       });
 
-      // If we are on mobile and in Colour or Design, initialize the slider.
       if (
         window.matchMedia("(max-width: 1024.9px)").matches &&
         (categoryKey === "Colour" || categoryKey === "Design")
       ) {
-        // Pass the slider container’s selector (or the cardsWrapper’s selector) to your slider initializer.
-        // (Assuming your initializeCardsSlider() already selects all ".cards-wrapper" elements.)
         initializeCardsSlider();
       }
     }
@@ -2380,7 +2395,7 @@ document.addEventListener("DOMContentLoaded", function () {
     cardContainer.className = "card_cardContainer";
     cardContainer.dataset.testId = categoryKey;
     cardContainer.tabIndex = index + 1;
-    // Add inline styles to mimic your sample design.
+
     cardContainer.style.cssText =
       "translate: none; rotate: none; scale: none; transform: translate(0px, 0px); touch-action: pan-y;";
 
@@ -2392,19 +2407,16 @@ document.addEventListener("DOMContentLoaded", function () {
     let count = 0;
     const categoryData = textures[categoryKey];
     if (Array.isArray(categoryData)) {
-      // “All Fabrics” case
       images = categoryData.slice(0, 4);
       count = categoryData.length;
     } else {
-      // For objects (e.g. Color, Design, Event) pick the first sub‑category as preview.
       const subKeys = Object.keys(categoryData);
       if (subKeys.length > 0) {
         images = categoryData[subKeys[0]].slice(0, 4);
         count = categoryData[subKeys[0]].length;
       }
     }
-    // For each image, create an <img> element.
-    // (Adjust the folder path as needed; here we use a default path for preview.)
+
     let folderPath = "";
     if (categoryKey === "All Fabrics") {
       folderPath = "./assets/fabric/All Fabrics/";
@@ -2415,7 +2427,6 @@ document.addEventListener("DOMContentLoaded", function () {
     } else if (categoryKey === "Event") {
       folderPath = "./assets/fabric/Event/Business/";
     } else {
-      // fallback if needed
       folderPath = "./assets/fabric/All Fabrics/";
     }
     images.forEach((imgName) => {
@@ -2461,7 +2472,6 @@ document.addEventListener("DOMContentLoaded", function () {
   </svg>`;
     cardContainer.appendChild(arrowIcon);
 
-    // When the card is clicked, drill down to sub‑categories (or fabrics if an array).
     cardContainer.addEventListener("click", () => {
       showSubCategories(categoryKey);
     });
@@ -2471,12 +2481,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function initializeTextureButtons() {
     const textureContainer = document.getElementById("textureContainer");
-    textureContainer.innerHTML = ""; // Clear existing content
+    textureContainer.innerHTML = "";
 
     const cardsWrapper = document.createElement("div");
     cardsWrapper.className = "cards-wrapper";
 
-    // Loop over the top‐level categories (Color, Design, Event, All Fabrics)
     Object.keys(textures).forEach((categoryKey, index) => {
       const card = createTopLevelCategoryCard(categoryKey, index);
       cardsWrapper.appendChild(card);
@@ -2484,7 +2493,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     textureContainer.appendChild(cardsWrapper);
 
-    // (Optional) If on mobile, initialize the slider
     if (window.matchMedia("(max-width: 1024.9px)").matches) {
       initializeCardsSlider();
     }
@@ -2506,7 +2514,6 @@ document.addEventListener("DOMContentLoaded", function () {
     img.alt = item;
     imageContainer.appendChild(img);
 
-    // Info button (if needed)
     const infoSpaceContainer = document.createElement("div");
     infoSpaceContainer.className = "card_infoSpaceContainer card_dark";
     infoSpaceContainer.dataset.testId = "info-btn";
@@ -2519,9 +2526,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const cardText = document.createElement("div");
     cardText.className = "card_cardText";
     cardText.dataset.testId = "card-text";
-    cardText.textContent = getFabricName(item); // Assuming you want to format the name as well
+    cardText.textContent = getFabricName(item);
 
-    // Here we extract the price from the filename:
     const cardSubText = document.createElement("div");
     cardSubText.className = "card_cardSubText";
     cardSubText.dataset.testId = "card-subtext";
@@ -2542,25 +2548,23 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function getFabricName(filename) {
-    // Remove the extension:
     let baseName = filename.replace(/\.[^.]+$/, "");
-    // Remove the price part if it exists (everything from the dash onward)
+
     return baseName.replace(/-\s*\$[\d.]+$/, "");
   }
 
   function selectFabric(categoryKey, item, cardElement, folderPath) {
-    // Remove "selected" from any previously selected card containers.
+    console.log("Texture clicked:", item);
     document.querySelectorAll(".card_small.selected").forEach((card) => {
       card.classList.remove("selected");
     });
 
-    // Add the "selected" class to the entire card container.
     cardElement.classList.add("selected");
 
-    // Build the texture URL from the folder and file name.
     const textureUrl = folderPath + item;
     applyTexture(textureUrl);
-    userChoices.texture = item; // Store the selected fabric file name
+    userChoices.texture = item;
+    console.log("userChoices.texture updated to:", userChoices.texture);
   }
 
   function applyTexture(url) {
@@ -3469,7 +3473,14 @@ document.addEventListener("DOMContentLoaded", function () {
       transitionToStep(step);
       enableCameraControls();
     }
+    document.querySelector(
+      "body > main > div > div.canvas-container"
+    ).style.display = "block";
   });
+  function getFabricName(filename) {
+    let baseName = filename.replace(/\.[^.]+$/, ""); // remove extension
+    return baseName.replace(/-\s*\$[\d.]+$/, ""); // remove " - $price"
+  }
 
   document.getElementById("nextButton").addEventListener("click", function () {
     enableCameraControls();
@@ -3477,12 +3488,11 @@ document.addEventListener("DOMContentLoaded", function () {
     let selectedChoice = null;
 
     if (step === 1) {
-      const selectedTexture = document.querySelector(
-        ".card_cardImage.selected"
-      );
-      if (selectedTexture) {
-        selectedChoice = { texture: selectedTexture.alt };
-        userChoices.texture = selectedTexture.alt;
+      if (userChoices.texture) {
+        // Use getFabricName to remove the price and file extension.
+        const cleanedName = getFabricName(userChoices.texture);
+        selectedChoice = { texture: cleanedName };
+        userChoices.texture = cleanedName;
       } else {
         selectedChoice = { texture: "E5102-38.webp" };
         userChoices.texture = "E5102-38.webp";
@@ -3832,6 +3842,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     alert(summary);
     EmailSender.sendUserChoicesEmail(userChoices);
+    window.parent.postMessage(
+      { type: "userChoices", data: userChoices },
+      "*" // For security, you can restrict this to your parent domain
+    );
   }
 
   document
