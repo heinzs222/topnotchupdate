@@ -1,7 +1,7 @@
 import e from "./emailSender.js";
 document.addEventListener("DOMContentLoaded", function () {
   var t, a;
-  console.log("cart update new"), console.log("I hope plz");
+  console.log("cart update new images"), console.log("I hope plz");
   let s,
     n,
     i,
