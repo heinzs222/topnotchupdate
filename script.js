@@ -1,7 +1,7 @@
 import EmailSender from "./emailSender.js";
 
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("cart update new");
+  console.log("cart update new images");
   console.log("I hope plz");
   let mannequinRoot;
 
