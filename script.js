@@ -1,7 +1,7 @@
 import e from "./emailSender.js";
 document.addEventListener("DOMContentLoaded", function () {
   var t, a;
-  console.log("cart update new images"), console.log("I hope plz");
+  console.log("cart update new"), console.log("I hope plz");
   let s,
     n,
     i,
@@ -55,8 +55,8 @@ document.addEventListener("DOMContentLoaded", function () {
     P = !1,
     T = !1,
     N = 0,
-    S = 0,
-    B = "front",
+    B = 0,
+    S = "front",
     j = () => {
       ((u = new BABYLON.Scene(w)).clearColor = new BABYLON.Color3(
         0.937,
@@ -88,16 +88,17 @@ document.addEventListener("DOMContentLoaded", function () {
         (g.upperRadiusLimit = 20),
         (g.wheelPrecision = 100),
         new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), u);
-      (new BABYLON.DirectionalLight(
+      let t = new BABYLON.DirectionalLight(
         "dirLight",
         new BABYLON.Vector3(-1, -2, -1),
         u
-      ).position = new BABYLON.Vector3(20, 40, 20)),
+      );
+      (t.position = new BABYLON.Vector3(20, 40, 20)),
         (u.useRightHandedSystem = !0),
         (m = new BABYLON.StandardMaterial("material", u)),
         (h = new BABYLON.TransformNode("parent", u)),
         (b = new BABYLON.HighlightLayer("hl1", u));
-      let t = 0;
+      let a = 0;
       setTimeout(() => {
         console.log("All images have loaded and rendered."),
           gsap.to(".loader-tn", {
@@ -110,43 +111,44 @@ document.addEventListener("DOMContentLoaded", function () {
             },
           });
       }, 1e3);
-      let a = () => {
-        let e, a, s, l, p;
-        4 == ++t &&
+      let l = () => {
+        4 == ++a &&
           ((h.rotation.y = Math.PI / 2),
-          (S = N = h.rotation.y),
-          (B = "front"),
+          (B = N = h.rotation.y),
+          (S = "front"),
           et("./assets/fabric/All Fabrics/A52024006- $850.webp"),
-          h.computeWorldMatrix(!0),
-          (e = h.getChildMeshes()),
-          (a = new BABYLON.Vector3(
-            Number.MAX_VALUE,
-            Number.MAX_VALUE,
-            Number.MAX_VALUE
-          )),
-          (s = new BABYLON.Vector3(
-            -Number.MAX_VALUE,
-            -Number.MAX_VALUE,
-            -Number.MAX_VALUE
-          )),
-          e.forEach((e) => {
-            e.computeWorldMatrix(!0);
-            let t = e.getBoundingInfo(),
-              n = t.boundingBox.minimumWorld,
-              i = t.boundingBox.maximumWorld;
-            (a = BABYLON.Vector3.Minimize(a, n)),
-              (s = BABYLON.Vector3.Maximize(s, i));
-          }),
-          (l = a.add(s).scale(0.5)),
-          (h.position = h.position.subtract(l)),
-          g.setTarget(BABYLON.Vector3.Zero()),
-          (p = s.subtract(a).length()),
-          (g.radius = 1.5 * p),
-          (n = g.radius),
-          (i = g.target.clone()),
-          (o = g.alpha),
-          (r = g.beta),
-          (g.upperRadiusLimit = n),
+          (function e() {
+            h.computeWorldMatrix(!0);
+            let t = h.getChildMeshes(),
+              a = new BABYLON.Vector3(
+                Number.MAX_VALUE,
+                Number.MAX_VALUE,
+                Number.MAX_VALUE
+              ),
+              s = new BABYLON.Vector3(
+                -Number.MAX_VALUE,
+                -Number.MAX_VALUE,
+                -Number.MAX_VALUE
+              );
+            t.forEach((e) => {
+              e.computeWorldMatrix(!0);
+              let t = e.getBoundingInfo(),
+                n = t.boundingBox.minimumWorld,
+                i = t.boundingBox.maximumWorld;
+              (a = BABYLON.Vector3.Minimize(a, n)),
+                (s = BABYLON.Vector3.Maximize(s, i));
+            });
+            let l = a.add(s).scale(0.5);
+            (h.position = h.position.subtract(l)),
+              g.setTarget(BABYLON.Vector3.Zero());
+            let c = s.subtract(a).length();
+            (g.radius = 1.5 * c),
+              (n = g.radius),
+              (i = g.target.clone()),
+              (o = g.alpha),
+              (r = g.beta),
+              (g.upperRadiusLimit = n);
+          })(),
           (function e() {
             let t = H;
             if (
@@ -188,7 +190,7 @@ document.addEventListener("DOMContentLoaded", function () {
           })(),
           Y(c));
       };
-      function l(e) {
+      function v(e) {
         return e.startsWith("4on2_Back")
           ? "Back"
           : e.startsWith("4on2_Lapels")
@@ -204,14 +206,14 @@ document.addEventListener("DOMContentLoaded", function () {
             $.push(e),
             (e.renderingGroupId = 2),
             (_[e.name] = e);
-          let t = l(e.name);
+          let t = v(e.name);
           t && ((L[t] = e), (C[t][e.name] = e)),
             (e.actionManager = new BABYLON.ActionManager(u)),
             e.actionManager.registerAction(
               new BABYLON.ExecuteCodeAction(
                 BABYLON.ActionManager.OnPointerOverTrigger,
                 function (t) {
-                  let a = l(e.name);
+                  let a = v(e.name);
                   if (a && L[a]) {
                     let s = L[a];
                     b.addMesh(s, BABYLON.Color3.White()),
@@ -226,7 +228,7 @@ document.addEventListener("DOMContentLoaded", function () {
               new BABYLON.ExecuteCodeAction(
                 BABYLON.ActionManager.OnPointerOutTrigger,
                 function (t) {
-                  let a = l(e.name);
+                  let a = v(e.name);
                   if (a && L[a]) {
                     let s = L[a];
                     b.removeMesh(s),
@@ -241,12 +243,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 BABYLON.ActionManager.OnPickDownTrigger,
                 function (a) {
                   var s, n;
-                  ep((s = t), (n = e.name));
+                  (s = t), (n = e.name), ep(s, n);
                 }
               )
             );
         }),
-          a();
+          l();
       }),
         BABYLON.SceneLoader.ImportMesh("", "./", "pants.glb", u, (e) => {
           e.forEach((e) => {
@@ -256,16 +258,16 @@ document.addEventListener("DOMContentLoaded", function () {
               y.push(e),
               (_[e.name] = e);
           }),
-            a();
+            l();
         });
-      let v = new BABYLON.PBRMaterial("mannequinMaterial", u);
-      (v.albedoColor = new BABYLON.Color3(0.08, 0.08, 0.08)),
-        (v.metallic = 0),
-        (v.roughness = 1);
-      let E = new BABYLON.PBRMaterial("shoeMaterial", u);
-      for (let I in ((E.albedoColor = new BABYLON.Color3(0, 0, 0)),
-      (E.metallic = 0.5),
-      (E.roughness = 0.5),
+      let E = new BABYLON.PBRMaterial("mannequinMaterial", u);
+      (E.albedoColor = new BABYLON.Color3(0.08, 0.08, 0.08)),
+        (E.metallic = 0),
+        (E.roughness = 1);
+      let I = new BABYLON.PBRMaterial("shoeMaterial", u);
+      for (let M in ((I.albedoColor = new BABYLON.Color3(0, 0, 0)),
+      (I.metallic = 0.5),
+      (I.roughness = 0.5),
       BABYLON.SceneLoader.ImportMesh("", "./", "Mannequin.glb", u, (e) => {
         (s = new BABYLON.TransformNode("mannequinRoot", u)),
           e.forEach((e) => {
@@ -279,14 +281,14 @@ document.addEventListener("DOMContentLoaded", function () {
               (e.material = null),
               e.name.includes("unamed_unamedmesh_1") ||
               e.name.includes("Posed__mask_")
-                ? (e.material = v)
+                ? (e.material = E)
                 : ("shoe_L" === e.name || "shoe_R" === e.name) &&
-                  (e.material = E);
+                  (e.material = I);
           }),
           (s.parent = h),
           (s.scaling = new BABYLON.Vector3(0.01, 0.01, 0.01)),
           (s.position = new BABYLON.Vector3(0, 0, 0)),
-          a(),
+          l(),
           p
             ? (p.setEnabled(!0),
               console.log("Shirt already loaded. Ensured it is visible."))
@@ -295,11 +297,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 (t.diffuseColor = new BABYLON.Color3(1, 1, 1)),
                   (t.backFaceCulling = !1),
                   (p = new BABYLON.TransformNode("shirtRoot", u));
-                let n = [];
+                let a = [];
                 e.forEach((e) => {
                   e instanceof BABYLON.Mesh &&
                     (console.log("[SHIRT LOAD] Found shirt mesh:", e.name),
-                    n.push(e),
+                    a.push(e),
                     (e.material = t),
                     (e.parent = p),
                     (e.scaling = new BABYLON.Vector3(1, 1, 1)),
@@ -314,26 +316,26 @@ document.addEventListener("DOMContentLoaded", function () {
                   (p.parent = s),
                   (p.scaling = new BABYLON.Vector3(1, 1, 0.9)),
                   (p.position = new BABYLON.Vector3(0, 0, 0)),
-                  (S = N = p.rotation.y),
-                  (B = "front");
-                let i = [
+                  (B = N = p.rotation.y),
+                  (S = "front");
+                let n = [
                   "1_pleat",
                   "2_Button",
                   "Round_Cuffs",
                   "Front_1",
                   "Sleeves",
                 ];
-                n.forEach((e) => {
-                  i.includes(e.name)
+                a.forEach((e) => {
+                  n.includes(e.name)
                     ? (e.setEnabled(!0), b.addMesh(e, BABYLON.Color3.White()))
                     : e.setEnabled(!1);
                 }),
-                  a();
+                  l();
               });
       }),
       f))
-        f[I].forEach((e) => {
-          if (C[I][e]) return;
+        f[M].forEach((e) => {
+          if (C[M][e]) return;
           let t = e + ".glb";
           BABYLON.SceneLoader.ImportMesh(
             "",
@@ -344,7 +346,7 @@ document.addEventListener("DOMContentLoaded", function () {
               t.forEach((t) => {
                 (t.material = m),
                   (t.parent = h),
-                  (C[I][e] = t),
+                  (C[M][e] = t),
                   (_[t.name] = t),
                   t.setEnabled(!1),
                   (t.actionManager = new BABYLON.ActionManager(u)),
@@ -353,7 +355,7 @@ document.addEventListener("DOMContentLoaded", function () {
                       BABYLON.ActionManager.OnPickDownTrigger,
                       function (e) {
                         var a, s;
-                        ep((a = I), (s = t.name));
+                        (a = M), (s = t.name), ep(a, s);
                       }
                     )
                   );
@@ -379,12 +381,12 @@ document.addEventListener("DOMContentLoaded", function () {
           var e;
           let t = (e = g.alpha) % (2 * Math.PI);
           t < Math.PI / 4 || t > (7 * Math.PI) / 4
-            ? "front" !== B &&
-              ((B = "front"), console.log("Orientation changed to Front"))
+            ? "front" !== S &&
+              ((S = "front"), console.log("Orientation changed to Front"))
             : t > (3 * Math.PI) / 4 &&
               t < (5 * Math.PI) / 4 &&
-              "back" !== B &&
-              ((B = "back"), console.log("Orientation changed to Back"));
+              "back" !== S &&
+              ((S = "back"), console.log("Orientation changed to Back"));
         }),
         u
       );
@@ -408,12 +410,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }),
       t.forEach((e) => {
         e.addEventListener("mouseenter", function () {
-          let e = L[this.getAttribute("data-part")];
-          e && b.addMesh(e, BABYLON.Color3.White());
+          let e = this.getAttribute("data-part"),
+            t = L[e];
+          t && b.addMesh(t, BABYLON.Color3.White());
         }),
           e.addEventListener("mouseleave", function () {
-            let e = L[this.getAttribute("data-part")];
-            e && b.removeMesh(e);
+            let e = this.getAttribute("data-part"),
+              t = L[e];
+            t && b.removeMesh(t);
           });
       });
   }
@@ -989,7 +993,8 @@ document.addEventListener("DOMContentLoaded", function () {
         ${t}
       </div>
     `);
-      e.querySelectorAll(".design-options .card_cardContainer").forEach((e) => {
+      let a = e.querySelectorAll(".design-options .card_cardContainer");
+      a.forEach((e) => {
         e.addEventListener("click", () => {
           let t = e.getAttribute("data-test-id");
           console.log(`Clicked on jacket part: ${t}`),
@@ -997,9 +1002,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       });
     } else {
-      let a = "";
+      let s = "";
       ["Back", "Lapels", "Pockets"].forEach((e) => {
-        a += F(e);
+        s += F(e);
       }),
         (e.innerHTML += `
       <div class="controls">
@@ -1007,10 +1012,11 @@ document.addEventListener("DOMContentLoaded", function () {
         <button class="nextButton">Next</button>
       </div>
       <div class="cards-wrapper design-options">
-        ${a}
+        ${s}
       </div>
     `);
-      e.querySelectorAll(".design-options .card_cardContainer").forEach((e) => {
+      let n = e.querySelectorAll(".design-options .card_cardContainer");
+      n.forEach((e) => {
         e.addEventListener("click", () => {
           let t = e.getAttribute("data-test-id");
           console.log(`Clicked on jacket part: ${t}`),
@@ -1033,103 +1039,99 @@ document.addEventListener("DOMContentLoaded", function () {
         (e.innerHTML += `
       <div class="design-options">${t}</div>
     `);
-      document
-        .querySelectorAll(".design-options .card_cardContainer")
-        .forEach((e) => {
-          e.addEventListener("click", () => {
-            let t = e.getAttribute("data-test-id"),
-              a,
-              s,
-              n,
-              i;
-            console.log("Clicked Pants Part (mobile):", t),
-              "Cut" === t
-                ? ea()
-                : "Pleat" === t &&
-                  (console.log(
+      let a = document.querySelectorAll(".design-options .card_cardContainer");
+      a.forEach((e) => {
+        e.addEventListener("click", () => {
+          let t = e.getAttribute("data-test-id");
+          console.log("Clicked Pants Part (mobile):", t),
+            "Cut" === t
+              ? ea()
+              : "Pleat" === t &&
+                (function e() {
+                  console.log(
                     "[showMobilePleatOptions] Displaying pleat options..."
-                  ),
-                  ((a = document.getElementById("textureContainer")).innerHTML =
-                    ""),
-                  ((s = document.createElement("button")).textContent =
-                    "Confirm "),
-                  s.classList.add("back-to-cat"),
-                  s.addEventListener("click", () => {
-                    console.log(
-                      "[showMobilePleatOptions] Confirm clicked => returning"
-                    ),
-                      X();
-                  }),
-                  a.appendChild(s),
-                  ((n = document.createElement("div")).id =
-                    "mobilePleatSlider"),
+                  );
+                  let t = document.getElementById("textureContainer");
+                  t.innerHTML = "";
+                  let a = document.createElement("button");
+                  (a.textContent = "Confirm "),
+                    a.classList.add("back-to-cat"),
+                    a.addEventListener("click", () => {
+                      console.log(
+                        "[showMobilePleatOptions] Confirm clicked => returning"
+                      ),
+                        X();
+                    }),
+                    t.appendChild(a);
+                  let s = document.createElement("div");
+                  (s.id = "mobilePleatSlider"),
+                    s.classList.add("cards-wrapper");
+                  let n = document.createElement("div");
                   n.classList.add("cards-wrapper"),
-                  (i = document.createElement("div")).classList.add(
-                    "cards-wrapper"
-                  ),
-                  n.appendChild(i),
-                  [
-                    {
-                      src: "./assets/pants/pleat/pleat1.png",
-                      label: "Pleat 1",
-                    },
-                    {
-                      src: "./assets/pants/pleat/pleat2.png",
-                      label: "Pleat 2",
-                    },
-                    {
-                      src: "./assets/pants/pleat/pleat3.png",
-                      label: "Pleat 3",
-                    },
-                    {
-                      src: "./assets/pants/pleat/pleat4.png",
-                      label: "Pleat 4",
-                    },
-                    {
-                      src: "./assets/pants/pleat/pleat5.png",
-                      label: "Pleat 5",
-                    },
-                  ].forEach((e) => {
-                    let t = document.createElement("div");
-                    t.classList.add("card_cardContainer", "part-option"),
-                      t.setAttribute("data-part-name", "Pleat"),
-                      t.setAttribute("data-mesh-name", e.label),
-                      (t.tabIndex = 0),
-                      (t.style.touchAction = "pan-y"),
-                      (t.style.cursor = "pointer");
-                    let a = document.createElement("div");
-                    a.classList.add("img-wrapper"),
-                      (a.style.touchAction = "pan-y");
-                    let s = document.createElement("img");
-                    (s.src = e.src),
-                      (s.alt = e.label),
-                      (s.style.touchAction = "pan-y"),
-                      (s.style.width = "100%"),
-                      (s.style.height = "auto"),
-                      a.appendChild(s);
-                    let n = document.createElement("p");
-                    (n.textContent = e.label),
-                      (n.style.touchAction = "pan-y"),
-                      t.appendChild(a),
-                      t.appendChild(n),
-                      t.addEventListener("click", () => {
-                        console.log(
-                          "[showMobilePleatOptions] Chosen pleat:",
-                          e.label
-                        ),
-                          i.querySelectorAll(".part-option").forEach((e) => {
-                            e.classList.remove("selected");
-                          }),
-                          t.classList.add("selected"),
-                          (d.design.pants.pleat = e.label),
-                          ep("Pleat", e.label);
-                      }),
-                      i.appendChild(t);
-                  }),
-                  a.appendChild(n),
-                  V("#mobilePleatSlider"));
-          });
+                    s.appendChild(n),
+                    [
+                      {
+                        src: "./assets/pants/pleat/pleat1.png",
+                        label: "Pleat 1",
+                      },
+                      {
+                        src: "./assets/pants/pleat/pleat2.png",
+                        label: "Pleat 2",
+                      },
+                      {
+                        src: "./assets/pants/pleat/pleat3.png",
+                        label: "Pleat 3",
+                      },
+                      {
+                        src: "./assets/pants/pleat/pleat4.png",
+                        label: "Pleat 4",
+                      },
+                      {
+                        src: "./assets/pants/pleat/pleat5.png",
+                        label: "Pleat 5",
+                      },
+                    ].forEach((e) => {
+                      let t = document.createElement("div");
+                      t.classList.add("card_cardContainer", "part-option"),
+                        t.setAttribute("data-part-name", "Pleat"),
+                        t.setAttribute("data-mesh-name", e.label),
+                        (t.tabIndex = 0),
+                        (t.style.touchAction = "pan-y"),
+                        (t.style.cursor = "pointer");
+                      let a = document.createElement("div");
+                      a.classList.add("img-wrapper"),
+                        (a.style.touchAction = "pan-y");
+                      let s = document.createElement("img");
+                      (s.src = e.src),
+                        (s.alt = e.label),
+                        (s.style.touchAction = "pan-y"),
+                        (s.style.width = "100%"),
+                        (s.style.height = "auto"),
+                        a.appendChild(s);
+                      let i = document.createElement("p");
+                      (i.textContent = e.label),
+                        (i.style.touchAction = "pan-y"),
+                        t.appendChild(a),
+                        t.appendChild(i),
+                        t.addEventListener("click", () => {
+                          console.log(
+                            "[showMobilePleatOptions] Chosen pleat:",
+                            e.label
+                          ),
+                            n.querySelectorAll(".part-option").forEach((e) => {
+                              e.classList.remove("selected");
+                            }),
+                            t.classList.add("selected"),
+                            (d.design.pants.pleat = e.label),
+                            ep("Pleat", e.label);
+                        }),
+                        n.appendChild(t);
+                    }),
+                    t.appendChild(s),
+                    V("#mobilePleatSlider");
+                })();
         });
+      });
     } else
       (e.innerHTML += `
       <button class="accordion" data-category="pants">
@@ -1191,15 +1193,16 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   function J(e) {
     !(function e(t) {
-      if (!window.matchMedia("(max-width: 1024.9px)").matches) return;
-      let a = document.getElementById("textureContainer");
-      if (!a) {
+      let a = window.matchMedia("(max-width: 1024.9px)").matches;
+      if (!a) return;
+      let s = document.getElementById("textureContainer");
+      if (!s) {
         console.error("Element with ID 'textureContainer' not found.");
         return;
       }
-      a.classList.remove(...["step-1", "step-2", "step-3", "step-4", "step-5"]),
+      s.classList.remove(...["step-1", "step-2", "step-3", "step-4", "step-5"]),
         t >= 1 && t <= 5
-          ? (a.classList.add(`step-${t}`),
+          ? (s.classList.add(`step-${t}`),
             console.log(`Added class: step-${t}`))
           : console.warn(`Invalid step number: ${t}. Must be between 1 and 5.`);
     })(e);
@@ -1279,29 +1282,39 @@ document.addEventListener("DOMContentLoaded", function () {
               Jacket <span class="sign-acc">+</span>
             </button>
             <div class="panel" style="max-height: 0px;">
-              ${(r = [
-                { partName: "Back", options: f.Back },
-                { partName: "Lapels", options: f.Lapels },
-                { partName: "Pockets", options: f.Pockets },
-              ])
-                .map((e) => {
-                  if ("Pockets" === e.partName) {
-                    let t;
-                    return `
+              ${
+                ((r = [
+                  { partName: "Back", options: f.Back },
+                  { partName: "Lapels", options: f.Lapels },
+                  { partName: "Pockets", options: f.Pockets },
+                ]),
+                r
+                  .map((e) => {
+                    if ("Pockets" === e.partName) {
+                      let t = e.options.filter((e) =>
+                          [
+                            "4on2_pocket_4",
+                            "4on2_pocket_5",
+                            "4on2_pocket_6",
+                          ].includes(e)
+                        ),
+                        a = e.options.filter((e) =>
+                          [
+                            "4on2_pocket_1",
+                            "4on2_pocket_2",
+                            "4on2_pocket_3",
+                            "4on2_pocket_7",
+                            "4on2_pocket_8",
+                          ].includes(e)
+                        );
+                      return `
           <div class="part-item" data-part="${e.partName}">
             ${e.partName}
             <div class="part-options">
               <!-- Top Pockets Section -->
               <div class="sub-part top-pockets">
                 <h4>Top Pockets</h4>
-                ${e.options
-                  .filter((e) =>
-                    [
-                      "4on2_pocket_4",
-                      "4on2_pocket_5",
-                      "4on2_pocket_6",
-                    ].includes(e)
-                  )
+                ${t
                   .map(
                     (
                       e,
@@ -1315,16 +1328,7 @@ document.addEventListener("DOMContentLoaded", function () {
               <!-- Bottom Pockets Section -->
               <div class="sub-part bottom-pockets">
                 <h4>Bottom Pockets</h4>
-                ${e.options
-                  .filter((e) =>
-                    [
-                      "4on2_pocket_1",
-                      "4on2_pocket_2",
-                      "4on2_pocket_3",
-                      "4on2_pocket_7",
-                      "4on2_pocket_8",
-                    ].includes(e)
-                  )
+                ${a
                   .map(
                     (
                       e,
@@ -1338,9 +1342,9 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
           </div>
         `;
-                  }
-                  return e.options && e.options.length > 1
-                    ? `
+                    }
+                    return e.options && e.options.length > 1
+                      ? `
           <div class="part-item" data-part="${e.partName}">
             ${e.partName}
             <div class="part-options">
@@ -1356,9 +1360,10 @@ document.addEventListener("DOMContentLoaded", function () {
             </div>
           </div>
         `
-                    : `<div class="part-item" data-part="${e.partName}">${e.partName}</div>`;
-                })
-                .join("")}
+                      : `<div class="part-item" data-part="${e.partName}">${e.partName}</div>`;
+                  })
+                  .join(""))
+              }
             </div>
 
             <button class="accordion" data-category="pants">
@@ -1552,13 +1557,14 @@ document.addEventListener("DOMContentLoaded", function () {
                   o(s), n && n.classList.add("hidden");
                   let e = document.getElementById("colorChoices");
                   e && e.classList.add("hidden");
-                  if (0 === d.embroidery.jacket.length) {
+                  let t = d.embroidery.jacket;
+                  if (0 === t.length) {
                     alert("No embroidery locations chosen.");
                     return;
                   }
                   ey();
-                  let t = document.querySelector(".characters-inputs");
-                  t && (t.style.display = "block"), event.stopPropagation();
+                  let a = document.querySelector(".characters-inputs");
+                  a && (a.style.display = "block"), event.stopPropagation();
                 });
             let r = document.getElementById("colorChoices");
             if (r) {
@@ -1588,17 +1594,15 @@ document.addEventListener("DOMContentLoaded", function () {
                   );
                   return;
                 }
-                if (
-                  !(
-                    i.contains(e.target) ||
-                    (t && t.contains(e.target)) ||
-                    (a && a.contains(e.target)) ||
-                    (s && s.contains(e.target))
-                  )
-                ) {
+                let o =
+                  i.contains(e.target) ||
+                  (t && t.contains(e.target)) ||
+                  (a && a.contains(e.target)) ||
+                  (s && s.contains(e.target));
+                if (!o) {
                   n.classList.add("hidden");
-                  let o = document.getElementById("colorChoices");
-                  o && o.classList.add("hidden");
+                  let r = document.getElementById("colorChoices");
+                  r && r.classList.add("hidden");
                 }
               });
           })(),
@@ -1646,9 +1650,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div class="embroidery-color-picker">
                   <label>Select Color:</label>
                   <div id="embroidery-thread-colors-picker-jacket-${t}" class="color-picker-container">
-                    ${["#000000", "#FFFFFF", "#7A1313"]
-                      .map(
-                        (e) => `
+                    ${(function e(t) {
+                      let a = ["#000000", "#FFFFFF", "#7A1313"];
+                      return a
+                        .map(
+                          (e) => `
       <div class="color-circle ${
         d.embroidery.threadColor === e ? "selected" : ""
       }" 
@@ -1656,8 +1662,9 @@ document.addEventListener("DOMContentLoaded", function () {
            style="background-color: ${e};">
       </div>
     `
-                      )
-                      .join("")}
+                        )
+                        .join("");
+                    })(21)}
                   </div>
                 </div>
                 <div class="embroidery-text-input">
@@ -1808,73 +1815,65 @@ document.addEventListener("DOMContentLoaded", function () {
     let o = document.createElement("div");
     (o.className = "cards-wrapper"),
       s.forEach((t, s) => {
-        var n, i, r, l, c;
-        let p,
-          m,
-          u,
-          h,
-          g,
-          $,
-          y,
-          k,
-          _ =
-            ((n = e),
-            (i = t),
-            (r = s),
-            (l = a),
-            ((p = document.createElement("div")).className =
-              "card_cardContainer card_small"),
-            (p.dataset.testId = r),
-            (p.tabIndex = r + 1),
-            ((m = document.createElement("div")).className =
-              "card_cardImageContainer"),
-            ((u = document.createElement("img")).className = "card_cardImage"),
-            (u.loading = "lazy"),
-            (u.src = l + i),
-            (u.alt = i),
-            m.appendChild(u),
-            ((h = document.createElement("div")).className =
-              "card_infoSpaceContainer card_dark"),
-            (h.dataset.testId = "info-btn"),
-            (h.innerHTML = '<p class="susu-pcons" translate="no">info</p>'),
-            m.appendChild(h),
-            ((g = document.createElement("div")).className =
-              "card_cardDetails card_hideMobileInfoText"),
-            (($ = document.createElement("div")).className = "card_cardText"),
-            ($.dataset.testId = "card-text"),
-            ($.textContent = ee(i)),
-            ((y = document.createElement("div")).className =
-              "card_cardSubText"),
-            (y.dataset.testId = "card-subtext"),
-            (y.textContent = (k = (c = i)
-              .replace(/\.[^.]+$/, "")
-              .match(/-\s*(\$[\d.]+)/))
-              ? k[1]
-              : "$0.00"),
-            g.appendChild($),
-            g.appendChild(y),
-            p.appendChild(m),
-            p.appendChild(g),
-            p.addEventListener("click", (e) => {
-              var t, a, s, o;
+        let n = (function e(t, a, s, n) {
+          let i = document.createElement("div");
+          (i.className = "card_cardContainer card_small"),
+            (i.dataset.testId = s),
+            (i.tabIndex = s + 1);
+          let o = document.createElement("div");
+          o.className = "card_cardImageContainer";
+          let r = document.createElement("img");
+          (r.className = "card_cardImage"),
+            (r.loading = "lazy"),
+            (r.src = n + a),
+            (r.alt = a),
+            o.appendChild(r);
+          let l = document.createElement("div");
+          (l.className = "card_infoSpaceContainer card_dark"),
+            (l.dataset.testId = "info-btn"),
+            (l.innerHTML = '<p class="susu-pcons" translate="no">info</p>'),
+            o.appendChild(l);
+          let c = document.createElement("div");
+          c.className = "card_cardDetails card_hideMobileInfoText";
+          let p = document.createElement("div");
+          (p.className = "card_cardText"),
+            (p.dataset.testId = "card-text"),
+            (p.textContent = ee(a));
+          let m = document.createElement("div");
+          return (
+            (m.className = "card_cardSubText"),
+            (m.dataset.testId = "card-subtext"),
+            (m.textContent = (function e(t) {
+              let a = t.replace(/\.[^.]+$/, ""),
+                s = a.match(/-\s*(\$[\d.]+)/);
+              return s ? s[1] : "$0.00";
+            })(a)),
+            c.appendChild(p),
+            c.appendChild(m),
+            i.appendChild(o),
+            i.appendChild(c),
+            i.addEventListener("click", (e) => {
+              var s, o, r, l;
               e.stopPropagation(),
-                (t = n),
-                (a = i),
-                (s = p),
-                (o = l),
-                console.log("Texture clicked:", a),
+                (s = t),
+                (o = a),
+                (r = i),
+                (l = n),
+                console.log("Texture clicked:", o),
                 document
                   .querySelectorAll(".card_small.selected")
                   .forEach((e) => {
                     e.classList.remove("selected");
                   }),
-                s.classList.add("selected"),
-                et(o + a),
-                (d.texture = a),
+                r.classList.add("selected"),
+                et(l + o),
+                (d.texture = o),
                 console.log("userChoices.texture updated to:", d.texture);
             }),
-            p);
-        o.appendChild(_);
+            i
+          );
+        })(e, t, s, a);
+        o.appendChild(n);
       }),
       n.appendChild(o),
       window.matchMedia("(max-width: 1024.9px)").matches && e$();
@@ -1917,7 +1916,8 @@ document.addEventListener("DOMContentLoaded", function () {
             let o = document.createElement("div");
             (o.className = "card_cardImageContainer"),
               (o.style.touchAction = "pan-y;");
-            s.slice(0, 4).forEach((e) => {
+            let r = s.slice(0, 4);
+            r.forEach((e) => {
               let s = document.createElement("img");
               (s.className = "card_cardImage"), (s.loading = "lazy");
               let n = `./assets/fabric/${t}/${a}/`;
@@ -1926,28 +1926,28 @@ document.addEventListener("DOMContentLoaded", function () {
                 (s.style.touchAction = "pan-y;"),
                 o.appendChild(s);
             });
-            let r = document.createElement("div");
-            (r.className = "card_itemAmountContainer"),
-              (r.dataset.testId = "item-amount"),
-              (r.style.touchAction = "pan-y;"),
-              (r.textContent = s.length),
-              o.appendChild(r),
-              i.appendChild(o);
             let l = document.createElement("div");
-            (l.className = "card_cardDetails"),
-              (l.style.touchAction = "pan-y;");
-            let c = document.createElement("p");
-            (c.className = "card_cardText"),
-              (c.dataset.testId = "card-text"),
-              (c.style.touchAction = "pan-y;"),
-              (c.textContent = a),
-              l.appendChild(c),
-              i.appendChild(l);
-            let d = document.createElement("div");
-            return (
-              (d.className = "card_arrowIcon"),
+            (l.className = "card_itemAmountContainer"),
+              (l.dataset.testId = "item-amount"),
+              (l.style.touchAction = "pan-y;"),
+              (l.textContent = s.length),
+              o.appendChild(l),
+              i.appendChild(o);
+            let c = document.createElement("div");
+            (c.className = "card_cardDetails"),
+              (c.style.touchAction = "pan-y;");
+            let d = document.createElement("p");
+            (d.className = "card_cardText"),
+              (d.dataset.testId = "card-text"),
               (d.style.touchAction = "pan-y;"),
-              (d.innerHTML = `<svg class="arrow-right" xmlns="http://www.w3.org/2000/svg" fill="#000000" viewBox="0 0 330 330" width="30" height="30" style="touch-action: pan-y;">
+              (d.textContent = a),
+              c.appendChild(d),
+              i.appendChild(c);
+            let p = document.createElement("div");
+            return (
+              (p.className = "card_arrowIcon"),
+              (p.style.touchAction = "pan-y;"),
+              (p.innerHTML = `<svg class="arrow-right" xmlns="http://www.w3.org/2000/svg" fill="#000000" viewBox="0 0 330 330" width="30" height="30" style="touch-action: pan-y;">
     <path d="M250.606,154.389l-150-149.996c-5.857-5.858-15.355-5.858-21.213,0.001  
        c-5.857,5.858-5.857,15.355,0.001,21.213l139.393,139.39L79.393,304.394
        c-5.857,5.858-5.857,15.355,0.001,21.213  
@@ -1955,7 +1955,7 @@ document.addEventListener("DOMContentLoaded", function () {
        l149.999-150.004c2.814-2.813,4.394-6.628,4.394-10.606  
        C255,161.018,253.42,157.202,250.606,154.389z" style="touch-action: pan-y;"></path>
   </svg>`),
-              i.appendChild(d),
+              i.appendChild(p),
               i.addEventListener("click", () => {
                 let e = `./assets/fabric/${t}/${a}/`;
                 Z(t, a, e, s);
@@ -2059,41 +2059,23 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   function et(e) {
     if (!m || (m.diffuseTexture && m.diffuseTexture.name === e)) return;
-    let t = "./assets/fabric/placeholder.webp",
-      a = new BABYLON.Texture(
-        t,
-        u,
-        !1,
-        !0,
-        BABYLON.Texture.BILINEAR_SAMPLINGMODE,
-        () => {
-          console.log(`Placeholder texture loaded: ${t}`);
-        },
-        (e, a) => {
-          console.error(`Failed to load placeholder texture: ${t}`, e, a);
-        }
-      );
-    (a.uScale = 5),
-      (a.vScale = 5),
-      (m.diffuseTexture = a),
-      (m.diffuseTexture.name = t);
-    let s = new BABYLON.Texture(
+    let t = new BABYLON.Texture(
       e,
       u,
       !1,
       !0,
       BABYLON.Texture.TRILINEAR_SAMPLINGMODE,
       () => {
-        console.log(`High-res texture loaded: ${e}`),
-          (m.diffuseTexture = s),
-          (m.diffuseTexture.name = e);
+        console.log(`Texture loaded: ${e}`);
       },
       (t, a) => {
         console.error(`Failed to load texture: ${e}`, t, a);
       }
     );
-    (s.uScale = 5),
-      (s.vScale = 5),
+    (t.uScale = 5),
+      (t.vScale = 5),
+      (m.diffuseTexture = t),
+      (m.diffuseTexture.name = e),
       (m.backFaceCulling = !1),
       (m.specularColor = new BABYLON.Color3(0, 0, 0)),
       (m.ambientColor = new BABYLON.Color3(1, 1, 1));
@@ -2912,15 +2894,12 @@ document.addEventListener("DOMContentLoaded", function () {
       console.log("Camera controls enabled.");
   }
   function e$() {
-    document.querySelectorAll(".cards-wrapper").forEach((e) => {
+    let e = document.querySelectorAll(".cards-wrapper");
+    e.forEach((e) => {
       if (e.dataset.sliderInitialized) return;
-      let t;
-      eh(gsap.utils.toArray(".card_cardContainer", e), {
-        paused: !0,
-        draggable: !0,
-        speed: 2,
-        snap: 1,
-      }).progress(0, !1),
+      let t = gsap.utils.toArray(".card_cardContainer", e),
+        a = eh(t, { paused: !0, draggable: !0, speed: 2, snap: 1 });
+      a.progress(0, !1),
         gsap.set(e, { x: 0 }),
         (e.dataset.sliderInitialized = "true");
     });
@@ -3093,36 +3072,28 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((e) => {
         (l = e),
           (function e() {
-            if (!I) {
-              I = !0;
-              document
-                .getElementById("textureContainer")
-                .addEventListener("click", es);
-            }
+            if (I) return;
+            I = !0;
+            let t = document.getElementById("textureContainer");
+            t.addEventListener("click", es);
           })(),
           (function e() {
-            if (!M) {
-              M = !0;
-              document
-                .getElementById("textureContainer")
-                .addEventListener("click", ei);
-            }
+            if (M) return;
+            M = !0;
+            let t = document.getElementById("textureContainer");
+            t.addEventListener("click", ei);
           })(),
           (function e() {
-            if (!P) {
-              P = !0;
-              document
-                .getElementById("textureContainer")
-                .addEventListener("click", em);
-            }
+            if (P) return;
+            P = !0;
+            let t = document.getElementById("textureContainer");
+            t.addEventListener("click", em);
           })(),
           (function e() {
-            if (!T) {
-              T = !0;
-              document
-                .getElementById("textureContainer")
-                .addEventListener("click", eu);
-            }
+            if (T) return;
+            T = !0;
+            let t = document.getElementById("textureContainer");
+            t.addEventListener("click", eu);
           })();
       })
       .catch((e) => console.error("Error loading textures.json:", e)),
@@ -3133,27 +3104,26 @@ document.addEventListener("DOMContentLoaded", function () {
   let e_ = document.getElementById("arrow");
   e_
     ? e_.addEventListener("click", () => {
-        var e;
-        let t, a, s;
-        (e = Math.PI / 2),
-          (t = h.rotation.y + e),
-          (a = new BABYLON.Animation(
-            "rotateAnimation",
-            "rotation.y",
-            60,
-            BABYLON.Animation.ANIMATIONTYPE_FLOAT,
-            BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE
-          )),
-          (s = [
-            { frame: 0, value: h.rotation.y },
-            { frame: 120, value: t },
-          ]),
-          a.setKeys(s),
-          (h.animations = []),
-          h.animations.push(a),
-          u.beginAnimation(h, 0, 120, !1, 1, () => {}),
-          (h.rotation.y = t),
-          console.log(`Model rotated to Y=${t}`);
+        !(function e(t) {
+          let a = h.rotation.y + t,
+            s = new BABYLON.Animation(
+              "rotateAnimation",
+              "rotation.y",
+              60,
+              BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+              BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE
+            ),
+            n = [
+              { frame: 0, value: h.rotation.y },
+              { frame: 120, value: a },
+            ];
+          s.setKeys(n),
+            (h.animations = []),
+            h.animations.push(s),
+            u.beginAnimation(h, 0, 120, !1, 1, () => {}),
+            (h.rotation.y = a),
+            console.log(`Model rotated to Y=${a}`);
+        })(Math.PI / 2);
       })
     : console.warn('Arrow element with id "arrow" not found.'),
     document.getElementById("resetCameraButton").addEventListener("click", q);
