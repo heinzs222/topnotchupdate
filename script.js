@@ -3863,18 +3863,19 @@ document.addEventListener("DOMContentLoaded", function () {
         userChoices.design.pants["Pockets"] = selectedMeshName;
       }
     });
-  // Helper: Build the full URLs from your JSON structure
+  // Helper: Build a list of full image URLs from your JSON data
   function buildImageUrls(jsonData) {
     const urls = [];
     for (let category in jsonData) {
       const value = jsonData[category];
-      // If the value is an array, this is a top-level category like "All Fabrics"
       if (Array.isArray(value)) {
+        // For top-level arrays (e.g., "All Fabrics")
         value.forEach((fileName) => {
+          // Adjust folder path as needed. For example:
           urls.push(`./assets/fabric_optimized/${category}/${fileName}`);
         });
       } else if (typeof value === "object") {
-        // Otherwise, iterate over subcategories (e.g. "Colour" or "Design")
+        // For nested objects (e.g., "Colour", "Design", "Event")
         for (let subCategory in value) {
           value[subCategory].forEach((fileName) => {
             urls.push(
@@ -3887,40 +3888,53 @@ document.addEventListener("DOMContentLoaded", function () {
     return urls;
   }
 
-  // Helper: Preload an array of image URLs
-  function preloadImages(urls, onComplete) {
-    let loadedCount = 0;
-    const total = urls.length;
-    urls.forEach((url) => {
-      const img = new Image();
-      img.onload = img.onerror = () => {
-        loadedCount++;
-        // Optional: log progress if desired
-        // console.log(`Loaded ${loadedCount} of ${total}`);
-        if (loadedCount === total && typeof onComplete === "function") {
-          onComplete();
-        }
-      };
-      img.src = url;
+  // Helper: Preload images and return a Promise that resolves when done
+  function preloadImages(urls) {
+    return new Promise((resolve) => {
+      let loadedCount = 0;
+      const total = urls.length;
+      urls.forEach((url) => {
+        const img = new Image();
+        img.onload = img.onerror = () => {
+          loadedCount++;
+          // Optionally update a progress indicator:
+          // console.log(`Loaded ${loadedCount} of ${total}`);
+          if (loadedCount === total) {
+            resolve();
+          }
+        };
+        img.src = url;
+      });
     });
   }
+
+  // Updated fetch code that preloads images and holds the loading screen until done
   fetch("textures.json")
     .then((response) => response.json())
     .then((data) => {
       textures = data;
 
-      // Dynamically build a list of image URLs from the JSON
+      // Build the URL list from the JSON data
       const urlsToPreload = buildImageUrls(textures);
       console.log("Preloading", urlsToPreload.length, "images...");
 
-      // Preload images and then set up the scene and UI
-      preloadImages(urlsToPreload, () => {
-        console.log("All images preloaded dynamically!");
+      // Preload all images
+      preloadImages(urlsToPreload).then(() => {
+        console.log("All images preloaded!");
+
+        // Hide the loading screen (assuming you have an element with id="loader")
+        const loader = document.getElementById("loader");
+        if (loader) {
+          loader.style.display = "none";
+        }
+
+        // Now that images are preloaded, initialize your UI and scene
         setupAccordions();
         setupPartSelection();
         setupPantsItemSelection();
         setupEmbroideryChoiceListener();
-        // If you need to trigger any further initialization (e.g. starting your scene), do it here.
+
+        // If you want to start your Babylon scene here, it will benefit from cached images.
       });
     })
     .catch((error) => console.error("Error loading textures.json:", error));
