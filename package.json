@@ -1,5 +1,7 @@
 {
   "dependencies": {
-    "gltf-pipeline": "^4.1.0"
+    "glob": "^7.2.0",
+    "gltf-pipeline": "^4.1.0",
+    "sharp-cli": "^5.1.0"
   }
 }
