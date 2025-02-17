@@ -2,7 +2,7 @@ import EmailSender from "./emailSender.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("cart update new");
-  console.log("I hope plz based on network");
+  console.log("I hope plz based on network lazy sizes");
   let mannequinRoot;
 
   let initialCameraRadius,
