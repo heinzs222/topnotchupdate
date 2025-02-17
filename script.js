@@ -2,7 +2,7 @@ import EmailSender from "./emailSender.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("cart update new");
-  console.log("I hope plz based on network plz plz");
+  console.log("I hope plz based on network");
   let mannequinRoot;
 
   let initialCameraRadius,
@@ -653,7 +653,7 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="card_cardContainer" data-test-id="${partName}" tabindex="0">
       <div class="card_cardImageContainer">
         <!-- Back Design Images (Assuming 4 options) -->
-        <img  class="card_cardImage image-jacket-back"  src="./assets/jacket/back/jacketback.png" alt="Classic Back">
+        <img loading="lazyload" class="card_cardImage image-jacket-back"  src="./assets/jacket/back/jacketback.png" alt="Classic Back">
         <!-- Show # of images if you like -->
         <div class="card_itemAmountContainer" data-test-id="item-amount">4</div>
       </div>
@@ -686,7 +686,7 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="card_cardContainer" data-test-id="${partName}" tabindex="0">
       <div class="card_cardImageContainer">
         <!-- Lapel Design Images (Assuming 3 options) -->
-        <img  class="card_cardImage image-jacket-lapels"  src="./assets/jacket/lapel/jacketlapel.png" alt="Classic Lapel">
+        <img loading="lazyload" class="card_cardImage image-jacket-lapels"  src="./assets/jacket/lapel/jacketlapel.png" alt="Classic Lapel">
         <div class="card_itemAmountContainer" data-test-id="item-amount">3</div>
       </div>
       <div class="card_cardDetails">
@@ -718,7 +718,7 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="card_cardContainer" data-test-id="${partName}" tabindex="0">
       <div class="card_cardImageContainer">
         <!-- Pockets Design Images (Assuming 4 options) -->
-        <img  class="card_cardImage image-jacket-pockets"  src="./assets/jacket/pockets/jacketpockets.png" alt="Single Pocket">
+        <img loading="lazyload" class="card_cardImage image-jacket-pockets"  src="./assets/jacket/pockets/jacketpockets.png" alt="Single Pocket">
         <div class="card_itemAmountContainer" data-test-id="item-amount">8</div>
       </div>
       <div class="card_cardDetails">
@@ -752,10 +752,10 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="card_cardContainer" data-test-id="${partName}" tabindex="0">
       <div class="card_cardImageContainer">
         <!-- 4 CUT IMAGES -->
-        <img  class="card_cardImage image-pants-cut"  src="./assets/pants/cut/cut1.png" alt="Extra Slim">
-        <img  class="card_cardImage image-pants-cut"  src="./assets/pants/cut/cut2.png" alt="Slim">
-        <img  class="card_cardImage image-pants-cut"  src="./assets/pants/cut/cut3.png" alt="Straight">
-        <img  class="card_cardImage image-pants-cut"  src="./assets/pants/cut/cut4.png" alt="Classic">
+        <img loading="lazyload" class="card_cardImage image-pants-cut"  src="./assets/pants/cut/cut1.png" alt="Extra Slim">
+        <img loading="lazyload" class="card_cardImage image-pants-cut"  src="./assets/pants/cut/cut2.png" alt="Slim">
+        <img loading="lazyload" class="card_cardImage image-pants-cut"  src="./assets/pants/cut/cut3.png" alt="Straight">
+        <img loading="lazyload" class="card_cardImage image-pants-cut"  src="./assets/pants/cut/cut4.png" alt="Classic">
         <!-- Show # of images if you like -->
         <div class="card_itemAmountContainer" data-test-id="item-amount">4</div>
       </div>
@@ -788,10 +788,10 @@ document.addEventListener("DOMContentLoaded", function () {
     <div class="card_cardContainer" data-test-id="${partName}" tabindex="0">
       <div class="card_cardImageContainer">
         <!-- 5 PLEAT IMAGES -->
-        <img  class="card_cardImage image-pants-pleat"  src="./assets/pants/pleat/pleat1.png" alt="Pleat 1">
-        <img  class="card_cardImage image-pants-pleat"  src="./assets/pants/pleat/pleat2.png" alt="Pleat 2">
-        <img  class="card_cardImage image-pants-pleat"  src="./assets/pants/pleat/pleat3.png" alt="Pleat 3">
-        <img  class="card_cardImage image-pants-pleat"  src="./assets/pants/pleat/pleat4.png" alt="Pleat 4">
+        <img loading="lazyload" class="card_cardImage image-pants-pleat"  src="./assets/pants/pleat/pleat1.png" alt="Pleat 1">
+        <img loading="lazyload" class="card_cardImage image-pants-pleat"  src="./assets/pants/pleat/pleat2.png" alt="Pleat 2">
+        <img loading="lazyload" class="card_cardImage image-pants-pleat"  src="./assets/pants/pleat/pleat3.png" alt="Pleat 3">
+        <img loading="lazyload" class="card_cardImage image-pants-pleat"  src="./assets/pants/pleat/pleat4.png" alt="Pleat 4">
  
         <!-- Show # of images if you like -->
         <div class="card_itemAmountContainer" data-test-id="item-amount">5</div>
@@ -826,10 +826,10 @@ document.addEventListener("DOMContentLoaded", function () {
   <div class="card_cardContainer" data-test-id="${partName}" tabindex="0">
     <div class="card_cardImageContainer">
       <!-- Default Images -->
-      <img  class="card_cardImage"  src="./assets/fabric_optimized/business/E5101-38.webp" alt="E5101-38">
-      <img  class="card_cardImage"  src="./assets/fabric_optimized/business/E5102-38.webp" alt="E5102-38">
-      <img  class="card_cardImage"  src="./assets/fabric_optimized/business/E5103-38.webp" alt="E5103-38">
-      <img  class="card_cardImage"  src="./assets/fabric_optimized/business/E5104-38.webp" alt="E5104-38">
+      <img loading="lazyload" class="card_cardImage"  src="./assets/fabric_optimized/business/E5101-38.webp" alt="E5101-38">
+      <img loading="lazyload" class="card_cardImage"  src="./assets/fabric_optimized/business/E5102-38.webp" alt="E5102-38">
+      <img loading="lazyload" class="card_cardImage"  src="./assets/fabric_optimized/business/E5103-38.webp" alt="E5103-38">
+      <img loading="lazyload" class="card_cardImage"  src="./assets/fabric_optimized/business/E5104-38.webp" alt="E5104-38">
       <div class="card_itemAmountContainer" data-test-id="item-amount">25</div>
     </div>
     <div class="card_cardDetails">
@@ -1689,7 +1689,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <div id="chooseGarmentContainer" style="display: flex; gap: 20px;">
               <div class="card_cardContainer" data-test-id="chooseJacket" tabindex="0">
                 <div class="card_cardImageContainer">
-                  <img  class="card_cardImage"  src="./assets/jacketandpants/jacket.png" alt="Jacket">
+                  <img loading="lazyload" class="card_cardImage"  src="./assets/jacketandpants/jacket.png" alt="Jacket">
                   <div class="card_itemAmountContainer" data-test-id="item-amount">Jacket</div>
                 </div>
                 <div class="card_cardDetails">
@@ -1698,7 +1698,7 @@ document.addEventListener("DOMContentLoaded", function () {
               </div>
               <div class="card_cardContainer" data-test-id="choosePants" tabindex="0">
                 <div class="card_cardImageContainer">
-                  <img  class="card_cardImage"  src="assets/jacketandpants/pant.png" alt="Pants">
+                  <img loading="lazyload" class="card_cardImage"  src="assets/jacketandpants/pant.png" alt="Pants">
                   <div class="card_itemAmountContainer" data-test-id="item-amount">Pants</div>
                 </div>
                 <div class="card_cardDetails">
@@ -1752,43 +1752,43 @@ document.addEventListener("DOMContentLoaded", function () {
                 <!-- 8 images for Cut -->
                 <div id="pantsCutContainer" style="display: flex; flex-wrap: wrap;">
                   <div class="pants-item">
-                    <img  src="./assets/pants/cut/cut1.png" alt="Extra Slim">
+                    <img loading="lazyload" src="./assets/pants/cut/cut1.png" alt="Extra Slim">
                     <p>Extra Slim</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/cut/cut2.png" alt="Slim">
+                    <img loading="lazyload" src="./assets/pants/cut/cut2.png" alt="Slim">
                     <p>Slim</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/cut/cut3.png" alt="Straight">
+                    <img loading="lazyload" src="./assets/pants/cut/cut3.png" alt="Straight">
                     <p>Straight</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/cut/cut4.png" alt="Classic">
+                    <img loading="lazyload" src="./assets/pants/cut/cut4.png" alt="Classic">
                     <p>Classic</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/cut/cut5.png" alt="Relaxed Fit">
+                    <img loading="lazyload" src="./assets/pants/cut/cut5.png" alt="Relaxed Fit">
                     <p>Relaxed Fit</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/cut/cut6.png" alt="Tapered Leg">
+                    <img loading="lazyload" src="./assets/pants/cut/cut6.png" alt="Tapered Leg">
                     <p>Tapered Leg</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/cut/cut7.png" alt="Flat Front">
+                    <img loading="lazyload" src="./assets/pants/cut/cut7.png" alt="Flat Front">
                     <p>Flat Front</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/cut/cut8.png" alt="Pleated Front">
+                    <img loading="lazyload" src="./assets/pants/cut/cut8.png" alt="Pleated Front">
                     <p>Pleated Front</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/cut/cut9.png" alt="High waist">
+                    <img loading="lazyload" src="./assets/pants/cut/cut9.png" alt="High waist">
                     <p>High waist</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/cut/cut10.png" alt="Low rise">
+                    <img loading="lazyload" src="./assets/pants/cut/cut10.png" alt="Low rise">
                     <p>Low rise</p>
                   </div>
                 </div>
@@ -1800,23 +1800,23 @@ document.addEventListener("DOMContentLoaded", function () {
               <div class="sub_panel">
                  <div id="pantsCutContainer" style="display: flex; flex-wrap: wrap;">
                   <div class="pants-item">
-                    <img  src="./assets/pants/pleat/pleat1.png" alt="pleat">
+                    <img loading="lazyload" src="./assets/pants/pleat/pleat1.png" alt="pleat">
                     <p>pleat</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/pleat/pleat2.png" alt="pleat">
+                    <img loading="lazyload" src="./assets/pants/pleat/pleat2.png" alt="pleat">
                     <p>pleat</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/pleat/pleat3.png" alt="pleat">
+                    <img loading="lazyload" src="./assets/pants/pleat/pleat3.png" alt="pleat">
                     <p>pleat</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/pleat/pleat4.png" alt="pleat">
+                    <img loading="lazyload" src="./assets/pants/pleat/pleat4.png" alt="pleat">
                     <p>pleat</p>
                   </div>
                   <div class="pants-item">
-                    <img  src="./assets/pants/pleat/pleat5.png" alt="pleat">
+                    <img loading="lazyload" src="./assets/pants/pleat/pleat5.png" alt="pleat">
                     <p>pleat</p>
                   </div>
                 </div>
@@ -1842,20 +1842,20 @@ document.addEventListener("DOMContentLoaded", function () {
           <!-- Embroidery Choices -->
           <div class="choice-container-step3" id="embroideryChoices">
             <div class="jacket-embroidery-choice">
-              <img  src="./assets/embroidery/behind-your-lapel.png" alt="Inner right chest pocket"/>
+              <img loading="lazyload" src="./assets/embroidery/behind-your-lapel.png" alt="Inner right chest pocket"/>
               <p>Inner right chest pocket</p>
             </div>
             <div class="jacket-embroidery-choice">
-              <img  src="./assets/embroidery/inner-left-embroidery.png" alt="Inner left chest pocket"/>
+              <img loading="lazyload" src="./assets/embroidery/inner-left-embroidery.png" alt="Inner left chest pocket"/>
               <p>Inner left chest pocket</p>
             </div>
             <div class="jacket-embroidery-choice">
-              <img  src="./assets/embroidery/inner-right-embroidery.png" alt="Under the collar flap"/>
+              <img loading="lazyload" src="./assets/embroidery/inner-right-embroidery.png" alt="Under the collar flap"/>
               <p>Under the collar flap</p>
             </div>
             <!-- "No Embroidery" Option -->
             <div class="jacket-embroidery-choice no-embroidery">
-              <img  src="./assets/rectangle_115.webp" alt="No Embroidery"/>
+              <img loading="lazyload" src="./assets/rectangle_115.webp" alt="No Embroidery"/>
               <p>No Embroidery</p>
             </div>
           </div>
@@ -1966,7 +1966,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </svg></button>
             <div class="embroidery-color-and-text">
               <div class="jacket-embroidery-choice">
-                <img  class="embroidery-image" src="./assets/rectangle_115.webp" alt="${
+                <img loading="lazyload" class="embroidery-image" src="./assets/rectangle_115.webp" alt="${
                   embroidery.location
                 }">
                 <p>${embroidery.location}</p>
@@ -2058,7 +2058,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         textureContainer.innerHTML = `
         <div id="pantsMeasurementWrapper">
-          <img  id="pantsMeasurementImage" src="assets/pants/pants.png" alt="Pants Diagram">
+          <img loading="lazyload" id="pantsMeasurementImage" src="assets/pants/pants.png" alt="Pants Diagram">
           ${generatePantsMeasurementInputs()}
         </div>
       `;
@@ -2279,9 +2279,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const imagesToShow = fileNames.slice(0, 4);
     imagesToShow.forEach((item) => {
       const img = document.createElement("img");
-      img.className = "card_cardImage";
+      img.className = "card_cardImage lazyload";
 
       const folderPath = `./assets/fabric_optimized/${categoryKey}/${subCategoryKey}/`;
+      img.setAttribute("data-src", folderPath + item);
       img.src = folderPath + item;
       img.alt = item;
       img.style.touchAction = "pan-y;";
@@ -2322,6 +2323,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     cardContainer.addEventListener("click", () => {
       const folderPath = `./assets/fabric_optimized/${categoryKey}/${subCategoryKey}/`;
+      img.setAttribute("data-src", folderPath + item);
       showFabricItems(categoryKey, subCategoryKey, folderPath, fileNames);
     });
 
@@ -2425,7 +2427,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     images.forEach((imgName) => {
       const img = document.createElement("img");
-      img.className = "card_cardImage";
+      img.className = "card_cardImage lazyload";
 
       img.src = folderPath + imgName;
       img.alt = imgName;
@@ -2502,7 +2504,7 @@ document.addEventListener("DOMContentLoaded", function () {
     imageContainer.className = "card_cardImageContainer";
 
     const img = document.createElement("img");
-    img.className = "card_cardImage";
+    img.className = "card_cardImage lazyload";
 
     img.src = folderPath + item;
     img.alt = item;
