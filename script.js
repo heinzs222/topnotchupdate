@@ -199,7 +199,9 @@ document.addEventListener("DOMContentLoaded", function () {
         initialRotationY = parentNode.rotation.y;
         currentRotationY = initialRotationY;
         currentOrientation = "front";
-        applyTexture("./assets/fabric/All Fabrics/A52024006- $850.webp");
+        applyTexture(
+          "./assets/fabric_optimized/All Fabrics/A52024006- $850.webp"
+        );
         centerModel();
         selectDefaultJacketParts();
 
@@ -832,10 +834,10 @@ document.addEventListener("DOMContentLoaded", function () {
   <div class="card_cardContainer" data-test-id="${partName}" tabindex="0">
     <div class="card_cardImageContainer">
       <!-- Default Images -->
-      <img  class="card_cardImage"  src="./assets/fabric/business/E5101-38.webp" alt="E5101-38">
-      <img  class="card_cardImage"  src="./assets/fabric/business/E5102-38.webp" alt="E5102-38">
-      <img  class="card_cardImage"  src="./assets/fabric/business/E5103-38.webp" alt="E5103-38">
-      <img  class="card_cardImage"  src="./assets/fabric/business/E5104-38.webp" alt="E5104-38">
+      <img  class="card_cardImage"  src="./assets/fabric_optimized/business/E5101-38.webp" alt="E5101-38">
+      <img  class="card_cardImage"  src="./assets/fabric_optimized/business/E5102-38.webp" alt="E5102-38">
+      <img  class="card_cardImage"  src="./assets/fabric_optimized/business/E5103-38.webp" alt="E5103-38">
+      <img  class="card_cardImage"  src="./assets/fabric_optimized/business/E5104-38.webp" alt="E5104-38">
       <div class="card_itemAmountContainer" data-test-id="item-amount">25</div>
     </div>
     <div class="card_cardDetails">
@@ -2287,7 +2289,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const img = document.createElement("img");
       img.className = "card_cardImage";
 
-      const folderPath = `./assets/fabric/${categoryKey}/${subCategoryKey}/`;
+      const folderPath = `./assets/fabric_optimized/${categoryKey}/${subCategoryKey}/`;
       img.src = folderPath + item;
       img.alt = item;
       img.style.touchAction = "pan-y;";
@@ -2327,7 +2329,7 @@ document.addEventListener("DOMContentLoaded", function () {
     cardContainer.appendChild(arrowIcon);
 
     cardContainer.addEventListener("click", () => {
-      const folderPath = `./assets/fabric/${categoryKey}/${subCategoryKey}/`;
+      const folderPath = `./assets/fabric_optimized/${categoryKey}/${subCategoryKey}/`;
       showFabricItems(categoryKey, subCategoryKey, folderPath, fileNames);
     });
 
@@ -2349,7 +2351,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const categoryData = textures[categoryKey];
 
     if (Array.isArray(categoryData)) {
-      const folderPath = `./assets/fabric/All Fabrics/`;
+      const folderPath = `./assets/fabric_optimized/All Fabrics/`;
       showFabricItems(categoryKey, null, folderPath, categoryData);
     } else {
       let cardsWrapper;
@@ -2419,15 +2421,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let folderPath = "";
     if (categoryKey === "All Fabrics") {
-      folderPath = "./assets/fabric/All Fabrics/";
+      folderPath = "./assets/fabric_optimized/All Fabrics/";
     } else if (categoryKey === "Colour") {
-      folderPath = "./assets/fabric/Colour/Beige/";
+      folderPath = "./assets/fabric_optimized/Colour/Beige/";
     } else if (categoryKey === "Design") {
-      folderPath = "./assets/fabric/Design/Birdseye/";
+      folderPath = "./assets/fabric_optimized/Design/Birdseye/";
     } else if (categoryKey === "Event") {
-      folderPath = "./assets/fabric/Event/Business/";
+      folderPath = "./assets/fabric_optimized/Event/Business/";
     } else {
-      folderPath = "./assets/fabric/All Fabrics/";
+      folderPath = "./assets/fabric_optimized/All Fabrics/";
     }
     images.forEach((imgName) => {
       const img = document.createElement("img");
