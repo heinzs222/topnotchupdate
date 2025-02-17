@@ -2,7 +2,7 @@ import EmailSender from "./emailSender.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("cart update new");
-  console.log("I hope plz");
+  console.log("loader update");
   let mannequinRoot;
 
   let initialCameraRadius,
@@ -190,7 +190,7 @@ document.addEventListener("DOMContentLoaded", function () {
     setTimeout(() => {
       console.log("All images have loaded and rendered.");
       hideLoader();
-    }, 5000);
+    }, 1000);
     const onModelLoaded = () => {
       modelsLoaded++;
 
@@ -3871,7 +3871,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (Array.isArray(value)) {
         // For top-level arrays (e.g., "All Fabrics")
         value.forEach((fileName) => {
-          // Adjust folder path as needed. For example:
+          // Adjust the folder path as needed for your project.
           urls.push(`./assets/fabric_optimized/${category}/${fileName}`);
         });
       } else if (typeof value === "object") {
@@ -3888,7 +3888,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return urls;
   }
 
-  // Helper: Preload images and return a Promise that resolves when done
+  // Helper: Preload images and return a Promise that resolves when all are done
   function preloadImages(urls) {
     return new Promise((resolve) => {
       let loadedCount = 0;
@@ -3897,8 +3897,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const img = new Image();
         img.onload = img.onerror = () => {
           loadedCount++;
-          // Optionally update a progress indicator:
-          // console.log(`Loaded ${loadedCount} of ${total}`);
+          // Optionally, update a progress indicator here.
           if (loadedCount === total) {
             resolve();
           }
@@ -3908,33 +3907,26 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Updated fetch code that preloads images and holds the loading screen until done
+  // Updated fetch code that preloads images and keeps the loader visible until done
   fetch("textures.json")
     .then((response) => response.json())
     .then((data) => {
       textures = data;
-
-      // Build the URL list from the JSON data
       const urlsToPreload = buildImageUrls(textures);
       console.log("Preloading", urlsToPreload.length, "images...");
 
-      // Preload all images
       preloadImages(urlsToPreload).then(() => {
         console.log("All images preloaded!");
-
-        // Hide the loading screen (assuming you have an element with id="loader")
+        // Hide the loader—ensure your loader element has id="loader"
         const loader = document.getElementById("loader");
         if (loader) {
           loader.style.display = "none";
         }
-
-        // Now that images are preloaded, initialize your UI and scene
+        // Now you can initialize your UI and Babylon scene.
         setupAccordions();
         setupPartSelection();
         setupPantsItemSelection();
         setupEmbroideryChoiceListener();
-
-        // If you want to start your Babylon scene here, it will benefit from cached images.
       });
     })
     .catch((error) => console.error("Error loading textures.json:", error));
