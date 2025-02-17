@@ -2,7 +2,7 @@ import EmailSender from "./emailSender.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("cart update new");
-  console.log("I hope plz based on network");
+  console.log("I hope plz based on network plz plz");
   let mannequinRoot;
 
   let initialCameraRadius,
@@ -3856,45 +3856,31 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-  // Create a global Set to track URLs that are still loading.
   const pendingResources = new Set();
 
-  // Helper: Track a resource.
   function trackResource(url) {
     pendingResources.add(url);
-    // Optionally, update a visual indicator here (like a progress bar)
     console.log(`Tracking: ${url}. Pending: ${pendingResources.size}`);
   }
 
-  // Helper: Mark a resource as loaded (or errored).
   function markResourceLoaded(url) {
     pendingResources.delete(url);
     console.log(`Loaded: ${url}. Pending: ${pendingResources.size}`);
-    // If all resources are done, you can hide your loader.
     if (pendingResources.size === 0) {
-      console.log("All resources loaded!");
+      console.log("All resources loaded! Hiding loader now.");
       hideLoader();
     }
   }
 
-  // Function to hide the loader element.
-  function hideLoader() {
-    const loader = document.getElementById("loader");
-    if (loader) {
-      loader.style.display = "none";
-    }
-  }
-
-  // Preload images using your resource tracker.
   function preloadImages(urls) {
     return new Promise((resolve) => {
       let loadedCount = 0;
       const total = urls.length;
       urls.forEach((url) => {
-        trackResource(url); // Add to tracker
+        trackResource(url);
         const img = new Image();
         img.onload = img.onerror = () => {
-          markResourceLoaded(url); // Remove from tracker
+          markResourceLoaded(url);
           loadedCount++;
           if (loadedCount === total) {
             resolve();
@@ -3905,16 +3891,17 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Build the list of image URLs from your JSON data.
   function buildImageUrls(jsonData) {
     const urls = [];
     for (let category in jsonData) {
       const value = jsonData[category];
       if (Array.isArray(value)) {
+        // For top-level arrays (e.g. "All Fabrics")
         value.forEach((fileName) => {
           urls.push(`./assets/fabric_optimized/${category}/${fileName}`);
         });
       } else if (typeof value === "object") {
+        // For nested objects (e.g. "Colour", "Design", "Event")
         for (let subCategory in value) {
           value[subCategory].forEach((fileName) => {
             urls.push(
@@ -3927,7 +3914,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return urls;
   }
 
-  // Example: Use the fetch to get your JSON, preload images, and then continue.
+  // --- Fetch and Preload ---
   fetch("textures.json")
     .then((response) => response.json())
     .then((data) => {
@@ -3935,10 +3922,10 @@ document.addEventListener("DOMContentLoaded", function () {
       const urlsToPreload = buildImageUrls(textures);
       console.log(`Preloading ${urlsToPreload.length} images...`);
 
-      // Preload and wait until done.
+      // Preload all images; the loader will be hidden automatically when done.
       preloadImages(urlsToPreload).then(() => {
         console.log("All images preloaded and cached.");
-        // Here you can initialize your UI, scene, etc.
+        // Now that images are loaded, initialize your UI and Babylon scene.
         setupAccordions();
         setupPartSelection();
         setupPantsItemSelection();
@@ -4060,4 +4047,23 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("resetCameraButton")
     .addEventListener("click", resetCamera);
+  function hideLoader() {
+    const loader = document.getElementById("loader-top-notch");
+    if (loader) {
+      // Fade out the loader then remove it
+      gsap.to(loader, {
+        opacity: 0,
+        duration: 0.5,
+        ease: "power2.out",
+        onComplete: () => {
+          loader.style.display = "none";
+          // Optionally remove it from DOM:
+          loader.parentNode.removeChild(loader);
+          console.log("Loader hidden");
+        },
+      });
+    } else {
+      console.warn("No loader element found with id 'loader'");
+    }
+  }
 });
