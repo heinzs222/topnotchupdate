@@ -3863,16 +3863,65 @@ document.addEventListener("DOMContentLoaded", function () {
         userChoices.design.pants["Pockets"] = selectedMeshName;
       }
     });
+  // Helper: Build the full URLs from your JSON structure
+  function buildImageUrls(jsonData) {
+    const urls = [];
+    for (let category in jsonData) {
+      const value = jsonData[category];
+      // If the value is an array, this is a top-level category like "All Fabrics"
+      if (Array.isArray(value)) {
+        value.forEach((fileName) => {
+          urls.push(`./assets/fabric_optimized/${category}/${fileName}`);
+        });
+      } else if (typeof value === "object") {
+        // Otherwise, iterate over subcategories (e.g. "Colour" or "Design")
+        for (let subCategory in value) {
+          value[subCategory].forEach((fileName) => {
+            urls.push(
+              `./assets/fabric_optimized/${category}/${subCategory}/${fileName}`
+            );
+          });
+        }
+      }
+    }
+    return urls;
+  }
 
+  // Helper: Preload an array of image URLs
+  function preloadImages(urls, onComplete) {
+    let loadedCount = 0;
+    const total = urls.length;
+    urls.forEach((url) => {
+      const img = new Image();
+      img.onload = img.onerror = () => {
+        loadedCount++;
+        // Optional: log progress if desired
+        // console.log(`Loaded ${loadedCount} of ${total}`);
+        if (loadedCount === total && typeof onComplete === "function") {
+          onComplete();
+        }
+      };
+      img.src = url;
+    });
+  }
   fetch("textures.json")
     .then((response) => response.json())
     .then((data) => {
       textures = data;
 
-      setupAccordions();
-      setupPartSelection();
-      setupPantsItemSelection();
-      setupEmbroideryChoiceListener();
+      // Dynamically build a list of image URLs from the JSON
+      const urlsToPreload = buildImageUrls(textures);
+      console.log("Preloading", urlsToPreload.length, "images...");
+
+      // Preload images and then set up the scene and UI
+      preloadImages(urlsToPreload, () => {
+        console.log("All images preloaded dynamically!");
+        setupAccordions();
+        setupPartSelection();
+        setupPantsItemSelection();
+        setupEmbroideryChoiceListener();
+        // If you need to trigger any further initialization (e.g. starting your scene), do it here.
+      });
     })
     .catch((error) => console.error("Error loading textures.json:", error));
 
